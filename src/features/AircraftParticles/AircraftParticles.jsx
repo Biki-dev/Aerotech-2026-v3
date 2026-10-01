@@ -158,7 +158,6 @@ export default function AircraftParticleSection() {
               </p>
             </div>
             <div className="aircraft-particle-copy-meta">
-              <span>01</span>
               <span>WORKSHOP / COMPETITION / FLIGHT</span>
             </div>
           </div>
