@@ -42,19 +42,16 @@
 }
 
 .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  min-height: 22px;
+  display: block;
+  width: auto;
+  max-width: clamp(200px, 25vw, 300px);
+  height: auto;
   margin: 0 0 11px;
-  padding: 0 13px;
-  border-radius: 999px;
-  background: rgba(46, 45, 55, 0.22);
-  color: #f8f7fa;
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 600;
-  line-height: 1;
-  text-transform: uppercase;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  object-fit: contain;
+  filter: none;
 }
 
 .hero-copy h1 {

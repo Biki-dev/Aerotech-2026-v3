@@ -9,7 +9,11 @@ function Hero() {
       <section className="hero" aria-labelledby="hero-title">
         <canvas className="hero-canvas" ref={canvasRef} aria-hidden="true" />
         <div className="hero-copy">
-          <p className="eyebrow">Tools built for what&apos;s next.</p>
+          <img
+            className="eyebrow"
+            src="/aerotech_logo.png"
+            alt="Aerotech logo"
+          />
           <h1 id="hero-title">Work Smarter,<br />Future Faster</h1>
         </div>
 
