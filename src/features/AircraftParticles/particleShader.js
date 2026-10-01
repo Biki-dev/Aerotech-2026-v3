@@ -36,9 +36,10 @@ float noise(vec3 point) {
 
 void main() {
   float time = uTime * 0.55;
-  // Hold the intact F-22 for the first part of the pinned scroll runway so
-  // visitors have time to read the scene before the particle change begins.
-  float transitionProgress = clamp((uProgress - 0.16) / 0.84, 0.0, 1.0);
+  // Hold the intact F-22 for a deliberate scroll beat after the section pins.
+  // The longer runway below makes this feel like roughly two seconds of scroll
+  // before the particle change begins, even on a fast trackpad.
+  float transitionProgress = clamp((uProgress - 0.30) / 0.70, 0.0, 1.0);
   float morph = smoothstep(0.56, 0.92, transitionProgress);
   float morphWindow = smoothstep(0.34, 0.57, transitionProgress) * (1.0 - smoothstep(0.72, 0.94, transitionProgress));
   float dissolve = smoothstep(0.22, 0.5, transitionProgress) * (1.0 - smoothstep(0.78, 0.96, transitionProgress));

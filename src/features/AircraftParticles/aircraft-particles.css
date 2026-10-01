@@ -1,6 +1,6 @@
 .aircraft-particle-section {
   position: relative;
-  min-height: 180vh;
+  min-height: 220vh;
   overflow-x: clip;
   padding: 0;
   background: #FBFAF6;
@@ -150,7 +150,7 @@
 
 @media (max-width: 700px) {
   .aircraft-particle-section {
-    min-height: 170svh;
+    min-height: 210svh;
   }
 
   .aircraft-particle-shell {
