@@ -17,22 +17,17 @@ function AircraftModel({ scrollProgress }) {
   const groupRef = useRef(null)
   const pointsRef = useRef(null)
   const { scene } = useGLTF(fighterModelUrl)
-  const [screenSize, setScreenSize] = useState(() => {
-    if (typeof window === 'undefined') return 'desktop'
-    return window.innerWidth < 768 ? 'mobile' : 'desktop'
-  })
+  const [screenSize, setScreenSize] = useState(() => (
+    typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop'
+  ))
 
   useEffect(() => {
-    const handleResize = () => {
-      setScreenSize(window.innerWidth < 768 ? 'mobile' : 'desktop')
-    }
-
+    const handleResize = () => setScreenSize(window.innerWidth < 768 ? 'mobile' : 'desktop')
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   const particleCount = screenSize === 'mobile' ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP
-
   const particleData = useMemo(
     () => buildAircraftParticleData(scene, particleCount),
     [scene, particleCount],
@@ -40,82 +35,60 @@ function AircraftModel({ scrollProgress }) {
 
   const geometry = useMemo(() => {
     const nextGeometry = new THREE.BufferGeometry()
-    nextGeometry.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(particleData.positions, 3),
-    )
+    nextGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particleData.positions, 3))
+    nextGeometry.setAttribute('aDirection', new THREE.Float32BufferAttribute(particleData.directions, 3))
+    nextGeometry.setAttribute('aRandom', new THREE.Float32BufferAttribute(particleData.randoms, 1))
     nextGeometry.computeBoundingSphere()
     return nextGeometry
-  }, [particleData.positions])
+  }, [particleData])
 
-  const material = useMemo(
-    () =>
-      new THREE.ShaderMaterial({
-        uniforms: {
-          uTime: { value: 0 },
-          uProgress: { value: 0 },
-          uMouse: { value: new THREE.Vector2(0, 0) },
-          uPixelRatio: { value: Math.min(window.devicePixelRatio || 1, 2) },
-          uTurbulence: { value: 0.8 },
-          uHoverStrength: { value: 1 },
-          uDissolve: { value: 0 },
-        },
-        vertexShader: aircraftVertexShader,
-        fragmentShader: aircraftFragmentShader,
-        transparent: true,
-        depthWrite: false,
-        depthTest: true,
-        blending: THREE.NormalBlending,
-      }),
-    [],
-  )
+  const material = useMemo(() => new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uProgress: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uPixelRatio: { value: 1 },
+      uTurbulence: { value: 0.6 },
+      uHoverStrength: { value: 0.7 },
+    },
+    vertexShader: aircraftVertexShader,
+    fragmentShader: aircraftFragmentShader,
+    transparent: true,
+    depthWrite: false,
+    depthTest: true,
+    blending: THREE.NormalBlending,
+  }), [])
 
-  useEffect(() => {
-    return () => {
-      geometry.dispose()
-      material.dispose()
-    }
+  useEffect(() => () => {
+    geometry.dispose()
+    material.dispose()
   }, [geometry, material])
 
   useFrame((state) => {
-    const nextPoints = pointsRef.current
-    const nextGroup = groupRef.current
-
-    if (nextGroup) {
-      nextGroup.position.y = Math.sin(state.clock.elapsedTime * 1.2) * 0.26
-      nextGroup.rotation.y = THREE.MathUtils.lerp(
-        nextGroup.rotation.y,
-        -state.pointer.x * 0.85 - 0.9,
-        0.05,
-      )
-      nextGroup.rotation.x = THREE.MathUtils.lerp(
-        nextGroup.rotation.x,
-        0.42 + state.pointer.y * 0.18,
-        0.05,
-      )
-      nextGroup.rotation.z = THREE.MathUtils.lerp(
-        nextGroup.rotation.z,
-        -0.08 + state.pointer.x * 0.08,
-        0.05,
-      )
+    const group = groupRef.current
+    const points = pointsRef.current
+    if (group) {
+      const pointerX = state.pointer.x || 0
+      const pointerY = state.pointer.y || 0
+      group.position.y = Math.sin(state.clock.elapsedTime * 0.85) * 0.06
+      group.rotation.y = THREE.MathUtils.lerp(group.rotation.y, -0.62 - pointerX * 0.12, 0.035)
+      group.rotation.x = THREE.MathUtils.lerp(group.rotation.x, 0.22 + pointerY * 0.05, 0.035)
+      group.rotation.z = THREE.MathUtils.lerp(group.rotation.z, pointerX * 0.025, 0.035)
     }
+    if (!points) return
 
-    if (!nextPoints) return
-
-    const uniforms = nextPoints.material.uniforms
+    const uniforms = points.material.uniforms
     uniforms.uTime.value = state.clock.elapsedTime
     uniforms.uProgress.value = scrollProgress
-    uniforms.uMouse.value.set(state.pointer.x, state.pointer.y)
-    uniforms.uPixelRatio.value = Math.min(state.viewport.dpr, 2)
-    uniforms.uTurbulence.value =
-      0.8 + scrollProgress * 1.6 + (Math.abs(state.pointer.x) + Math.abs(state.pointer.y)) * 0.35
-    uniforms.uHoverStrength.value = 0.9 + scrollProgress * 1.3
-    uniforms.uDissolve.value = Math.min(1, scrollProgress * 1.1)
+    uniforms.uMouse.value.lerp(state.pointer, 0.12)
+    uniforms.uPixelRatio.value = Math.min(state.viewport.dpr, 1.8)
+    uniforms.uTurbulence.value = 0.55 + scrollProgress * 1.15
+    uniforms.uHoverStrength.value = 0.7 + scrollProgress * 0.5
   })
 
   return (
-    <group ref={groupRef} scale={1.52}>
-      <points ref={pointsRef} geometry={geometry} material={material} />
+    <group ref={groupRef} scale={1.0}>
+      <points ref={pointsRef} geometry={geometry} material={material} frustumCulled={false} />
     </group>
   )
 }
@@ -124,14 +97,10 @@ function AircraftScene({ scrollProgress }) {
   return (
     <Canvas
       dpr={[1, 1.8]}
-      camera={{ position: [0, 0.3, 6.5], fov: 30 }}
+      camera={{ position: [0, 0.55, 7.2], fov: 36 }}
       gl={{ antialias: true, alpha: true }}
     >
       <color attach="background" args={['#FBFAF6']} />
-      <fog attach="fog" args={['#FBFAF6', 16, 30]} />
-      <ambientLight intensity={1.1} />
-      <directionalLight position={[3, 4, 3]} intensity={1.2} color="#ffffff" />
-      <directionalLight position={[-4, -1, -2]} intensity={0.6} color="#b7d0ff" />
       <AircraftModel scrollProgress={scrollProgress} />
     </Canvas>
   )
@@ -145,22 +114,18 @@ export default function AircraftParticleSection() {
     const updateProgress = () => {
       const section = sectionRef.current
       if (!section) return
-
       const rect = section.getBoundingClientRect()
       const viewportHeight = window.innerHeight || 1
-      const progress = THREE.MathUtils.clamp(
+      setScrollProgress(THREE.MathUtils.clamp(
         (viewportHeight - rect.top) / (rect.height + viewportHeight * 0.65),
         0,
         1,
-      )
-
-      setScrollProgress(progress)
+      ))
     }
 
     updateProgress()
     window.addEventListener('scroll', updateProgress, { passive: true })
     window.addEventListener('resize', updateProgress)
-
     return () => {
       window.removeEventListener('scroll', updateProgress)
       window.removeEventListener('resize', updateProgress)
@@ -173,29 +138,22 @@ export default function AircraftParticleSection() {
         <header className="aircraft-particle-header">
           <span className="aircraft-particle-kicker">AEROTECH</span>
           <p className="aircraft-particle-subhead">ENGINEERED TO MOVE</p>
-          <p className="aircraft-particle-description">
-            Fighter-grade design, refined for motion and precision.
-          </p>
+          <p className="aircraft-particle-description">Fighter-grade design, refined for motion and precision.</p>
         </header>
 
         <div className="aircraft-particle-visual">
           <div className="aircraft-particle-stage">
             <AircraftScene scrollProgress={scrollProgress} />
           </div>
-
           <div className="aircraft-particle-badge">
-            <span className="aircraft-particle-badge__mark" aria-hidden="true">
-              ✈
-            </span>
+            <span className="aircraft-particle-badge__mark" aria-hidden="true">✈</span>
             <span id="aircraft-particle-title">PARTICLE AIRCRAFT</span>
           </div>
         </div>
 
         <div className="aircraft-particle-footer" aria-label="Explore the particle aircraft">
           <span>EXPLORE</span>
-          <span className="aircraft-particle-arrow" aria-hidden="true">
-            ↓
-          </span>
+          <span className="aircraft-particle-arrow" aria-hidden="true">↓</span>
         </div>
       </div>
     </section>

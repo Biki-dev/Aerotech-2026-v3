@@ -55,20 +55,7 @@
   width: 100%;
   height: clamp(440px, 60vw, 760px);
   overflow: hidden;
-  border: 1px solid rgba(17, 24, 39, 0.12);
-  background:
-    radial-gradient(circle at 50% 36%, rgba(150, 168, 194, 0.22), transparent 28%),
-    linear-gradient(180deg, rgba(245, 243, 238, 0.8), rgba(228, 232, 240, 0.4));
-}
-
-.aircraft-particle-stage::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: linear-gradient(rgba(17, 24, 39, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 24, 39, 0.02) 1px, transparent 1px);
-  background-size: 28px 28px;
-  mask-image: radial-gradient(circle at center, black 18%, transparent 78%);
-  pointer-events: none;
+  background: radial-gradient(circle at 50% 45%, rgba(181, 199, 224, 0.22), transparent 46%);
 }
 
 .aircraft-particle-stage canvas {
