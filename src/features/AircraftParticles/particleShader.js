@@ -40,9 +40,9 @@ void main() {
   // The longer runway below makes this feel like roughly two seconds of scroll
   // before the particle change begins, even on a fast trackpad.
   float transitionProgress = clamp((uProgress - 0.30) / 0.70, 0.0, 1.0);
-  float morph = smoothstep(0.56, 0.92, transitionProgress);
-  float morphWindow = smoothstep(0.34, 0.57, transitionProgress) * (1.0 - smoothstep(0.72, 0.94, transitionProgress));
-  float dissolve = smoothstep(0.22, 0.5, transitionProgress) * (1.0 - smoothstep(0.78, 0.96, transitionProgress));
+  float morph = smoothstep(0.5, 0.78, transitionProgress);
+  float morphWindow = smoothstep(0.3, 0.5, transitionProgress) * (1.0 - smoothstep(0.62, 0.76, transitionProgress));
+  float dissolve = smoothstep(0.2, 0.46, transitionProgress) * (1.0 - smoothstep(0.68, 0.8, transitionProgress));
   float activity = 0.018 + uTurbulence * 0.012;
   vec3 basePosition = mix(position, aTarget, morph);
   vec3 baseDirection = normalize(mix(aDirection, aTargetDirection, morph));
