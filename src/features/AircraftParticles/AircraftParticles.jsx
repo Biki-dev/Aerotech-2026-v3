@@ -87,7 +87,7 @@ function AircraftModel({ scrollProgress }) {
   })
 
   return (
-    <group ref={groupRef} scale={1.0}>
+    <group ref={groupRef} scale={[-1, 1, 1]}>
       <points ref={pointsRef} geometry={geometry} material={material} frustumCulled={false} />
     </group>
   )
@@ -135,24 +135,36 @@ export default function AircraftParticleSection() {
   return (
     <section className="aircraft-particle-section" ref={sectionRef} aria-labelledby="aircraft-particle-title">
       <div className="aircraft-particle-shell">
-        <header className="aircraft-particle-header">
-          <span className="aircraft-particle-kicker">AEROTECH</span>
-          <p className="aircraft-particle-subhead">ENGINEERED TO MOVE</p>
-          <p className="aircraft-particle-description">Fighter-grade design, refined for motion and precision.</p>
-        </header>
-
-        <div className="aircraft-particle-visual">
-          <div className="aircraft-particle-stage">
-            <AircraftScene scrollProgress={scrollProgress} />
+        <div className="aircraft-particle-layout">
+          <div className="aircraft-particle-copy">
+            <span className="aircraft-particle-kicker">ABOUT AEROTECH</span>
+            <h2 id="aircraft-particle-title" className="aircraft-particle-title">
+              BUILT FOR
+              <br />
+              MOTION
+            </h2>
+            <p className="aircraft-particle-description">
+              AeroTech brings curious minds together to build, test, and share the ideas that move flight forward. This particle aircraft is a small study in precision, motion, and the energy behind every takeoff.
+            </p>
+            <div className="aircraft-particle-copy-meta">
+              <span>01</span>
+              <span>FLIGHT / FORM / FUTURE</span>
+            </div>
           </div>
-          <div className="aircraft-particle-badge">
-            <span className="aircraft-particle-badge__mark" aria-hidden="true">✈</span>
-            <span id="aircraft-particle-title">PARTICLE AIRCRAFT</span>
+
+          <div className="aircraft-particle-visual">
+            <div className="aircraft-particle-stage">
+              <AircraftScene scrollProgress={scrollProgress} />
+            </div>
+            <div className="aircraft-particle-badge">
+              <span className="aircraft-particle-badge__mark" aria-hidden="true">✈</span>
+              <span>PARTICLE AIRCRAFT</span>
+            </div>
           </div>
         </div>
 
         <div className="aircraft-particle-footer" aria-label="Explore the particle aircraft">
-          <span>EXPLORE</span>
+          <span>HOVER TO EXPLORE</span>
           <span className="aircraft-particle-arrow" aria-hidden="true">↓</span>
         </div>
       </div>
