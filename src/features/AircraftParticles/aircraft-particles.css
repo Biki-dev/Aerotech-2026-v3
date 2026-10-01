@@ -1,0 +1,171 @@
+.aircraft-particle-section {
+  position: relative;
+  overflow-x: hidden;
+  padding: 2rem 0 6rem;
+  background: #FBFAF6;
+  color: #111827;
+}
+
+.aircraft-particle-shell {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.aircraft-particle-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.6rem;
+  text-align: center;
+}
+
+.aircraft-particle-kicker {
+  color: rgba(17, 24, 39, 0.6);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.aircraft-particle-subhead {
+  margin: 0;
+  color: #111827;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 300;
+  line-height: 0.94;
+  letter-spacing: 0.04em;
+}
+
+.aircraft-particle-description {
+  margin: 0;
+  color: rgba(17, 24, 39, 0.7);
+  font-size: 0.96rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+}
+
+.aircraft-particle-visual {
+  position: relative;
+}
+
+.aircraft-particle-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(440px, 60vw, 760px);
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.12);
+  background:
+    radial-gradient(circle at 50% 36%, rgba(150, 168, 194, 0.22), transparent 28%),
+    linear-gradient(180deg, rgba(245, 243, 238, 0.8), rgba(228, 232, 240, 0.4));
+}
+
+.aircraft-particle-stage::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(17, 24, 39, 0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(17, 24, 39, 0.02) 1px, transparent 1px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(circle at center, black 18%, transparent 78%);
+  pointer-events: none;
+}
+
+.aircraft-particle-stage canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.aircraft-particle-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  color: rgba(17, 24, 39, 0.68);
+  font-family: var(--font-body);
+  font-size: clamp(0.68rem, 1vw, 0.8rem);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.aircraft-particle-badge__mark {
+  display: grid;
+  place-items: center;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid rgba(17, 24, 39, 0.2);
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.02);
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.aircraft-particle-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-top: 1.4rem;
+  color: rgba(17, 24, 39, 0.8);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.aircraft-particle-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(17, 24, 39, 0.22);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+@media (max-width: 700px) {
+  .aircraft-particle-section {
+    padding: 1.5rem 0 3.75rem;
+  }
+
+  .aircraft-particle-shell {
+    width: min(100% - 24px, 720px);
+  }
+
+  .aircraft-particle-header {
+    margin-bottom: 1.1rem;
+  }
+
+  .aircraft-particle-subhead {
+    font-size: clamp(1.8rem, 6vw, 2.8rem);
+  }
+
+  .aircraft-particle-description {
+    font-size: 0.82rem;
+    letter-spacing: 0.02em;
+  }
+
+  .aircraft-particle-stage {
+    height: clamp(360px, 74vw, 520px);
+  }
+
+  .aircraft-particle-badge {
+    gap: 0.5rem;
+    letter-spacing: 0.12em;
+  }
+
+  .aircraft-particle-badge__mark {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .aircraft-particle-footer {
+    margin-top: 1rem;
+    letter-spacing: 0.12em;
+  }
+}
