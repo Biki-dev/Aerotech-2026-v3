@@ -10,6 +10,8 @@ function App() {
       <Timeline />
       <Sponsors />
       <AircraftParticleSection />
+       <Sponsors />
+        <Sponsors />
     </>
   )
 }

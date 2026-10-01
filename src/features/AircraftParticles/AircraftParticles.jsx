@@ -161,16 +161,7 @@ export default function AircraftParticleSection() {
             <div className="aircraft-particle-stage">
               <AircraftScene scrollProgress={scrollProgress} />
             </div>
-            <div className="aircraft-particle-badge">
-              <span className="aircraft-particle-badge__mark" aria-hidden="true">✈</span>
-              <span>PARTICLE AIRCRAFT</span>
-            </div>
           </div>
-        </div>
-
-        <div className="aircraft-particle-footer" aria-label="Explore the particle aircraft">
-          <span>HOVER TO EXPLORE</span>
-          <span className="aircraft-particle-arrow" aria-hidden="true">↓</span>
         </div>
       </div>
     </section>
