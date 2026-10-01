@@ -36,9 +36,12 @@ float noise(vec3 point) {
 
 void main() {
   float time = uTime * 0.55;
-  float morph = smoothstep(0.56, 0.92, uProgress);
-  float morphWindow = smoothstep(0.34, 0.57, uProgress) * (1.0 - smoothstep(0.72, 0.94, uProgress));
-  float dissolve = smoothstep(0.22, 0.5, uProgress) * (1.0 - smoothstep(0.78, 0.96, uProgress));
+  // Hold the intact F-22 for the first part of the pinned scroll runway so
+  // visitors have time to read the scene before the particle change begins.
+  float transitionProgress = clamp((uProgress - 0.16) / 0.84, 0.0, 1.0);
+  float morph = smoothstep(0.56, 0.92, transitionProgress);
+  float morphWindow = smoothstep(0.34, 0.57, transitionProgress) * (1.0 - smoothstep(0.72, 0.94, transitionProgress));
+  float dissolve = smoothstep(0.22, 0.5, transitionProgress) * (1.0 - smoothstep(0.78, 0.96, transitionProgress));
   float activity = 0.018 + uTurbulence * 0.012;
   vec3 basePosition = mix(position, aTarget, morph);
   vec3 baseDirection = normalize(mix(aDirection, aTargetDirection, morph));
