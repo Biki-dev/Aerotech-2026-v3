@@ -54,7 +54,7 @@ function AircraftModel({ scrollProgress }) {
       uMouse: { value: new THREE.Vector2(0, 0) },
       uPixelRatio: { value: 1 },
       uTurbulence: { value: 0.6 },
-      uHoverStrength: { value: 1.05 },
+      uHoverStrength: { value: 0.88 },
     },
     vertexShader: aircraftVertexShader,
     fragmentShader: aircraftFragmentShader,
@@ -88,7 +88,7 @@ function AircraftModel({ scrollProgress }) {
     uniforms.uMouse.value.lerp(state.pointer, 0.12)
     uniforms.uPixelRatio.value = Math.min(state.viewport.dpr, 1.8)
     uniforms.uTurbulence.value = 0.55 + scrollProgress * 1.15
-    uniforms.uHoverStrength.value = 1.05 + scrollProgress * 0.45
+    uniforms.uHoverStrength.value = 0.88 + scrollProgress * 0.35
   })
 
   return (

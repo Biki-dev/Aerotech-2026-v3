@@ -57,12 +57,12 @@ void main() {
   );
 
   float mouseDistance = distance(basePosition.xy, uMouse * 2.0);
-  float mouseInfluence = (1.0 - smoothstep(0.12, 2.25, mouseDistance)) * uHoverStrength;
+  float mouseInfluence = (1.0 - smoothstep(0.14, 2.0, mouseDistance)) * uHoverStrength;
   vec3 mouseDirection = normalize(vec3(basePosition.xy - uMouse * 2.0, baseDirection.z * 0.35) + vec3(0.0001));
-  float hoverSpread = mouseInfluence * (0.11 + aRandom * 0.24);
+  float hoverSpread = mouseInfluence * (0.085 + aRandom * 0.16);
   finalPosition += mouseDirection * hoverSpread;
-  finalPosition += baseDirection * mouseInfluence * (0.05 + aRandom * 0.13);
-  finalPosition += baseDirection * n * mouseInfluence * 0.16;
+  finalPosition += baseDirection * mouseInfluence * (0.035 + aRandom * 0.09);
+  finalPosition += baseDirection * n * mouseInfluence * 0.08;
 
   float shapeChange = morphWindow * (0.18 + aRandom * 0.5);
   finalPosition += baseDirection * shapeChange;
