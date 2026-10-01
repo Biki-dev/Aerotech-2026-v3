@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 const fighterModelUrl = new URL('../../assets/f-22.glb', import.meta.url).href
+const cessnaModelUrl = new URL('../../assets/cessna-172.glb', import.meta.url).href
 
 import {
   buildAircraftParticleData,
@@ -16,7 +17,8 @@ import './aircraft-particles.css'
 function AircraftModel({ scrollProgress }) {
   const groupRef = useRef(null)
   const pointsRef = useRef(null)
-  const { scene } = useGLTF(fighterModelUrl)
+  const { scene: fighterScene } = useGLTF(fighterModelUrl)
+  const { scene: cessnaScene } = useGLTF(cessnaModelUrl)
   const [screenSize, setScreenSize] = useState(() => (
     typeof window !== 'undefined' && window.innerWidth < 768 ? 'mobile' : 'desktop'
   ))
@@ -28,16 +30,19 @@ function AircraftModel({ scrollProgress }) {
   }, [])
 
   const particleCount = screenSize === 'mobile' ? PARTICLE_COUNT_MOBILE : PARTICLE_COUNT_DESKTOP
-  const particleData = useMemo(
-    () => buildAircraftParticleData(scene, particleCount),
-    [scene, particleCount],
-  )
+  const particleData = useMemo(() => {
+    const fighter = buildAircraftParticleData(fighterScene, particleCount)
+    const cessna = buildAircraftParticleData(cessnaScene, particleCount)
+    return { fighter, cessna }
+  }, [fighterScene, cessnaScene, particleCount])
 
   const geometry = useMemo(() => {
     const nextGeometry = new THREE.BufferGeometry()
-    nextGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particleData.positions, 3))
-    nextGeometry.setAttribute('aDirection', new THREE.Float32BufferAttribute(particleData.directions, 3))
-    nextGeometry.setAttribute('aRandom', new THREE.Float32BufferAttribute(particleData.randoms, 1))
+    nextGeometry.setAttribute('position', new THREE.Float32BufferAttribute(particleData.fighter.positions, 3))
+    nextGeometry.setAttribute('aTarget', new THREE.Float32BufferAttribute(particleData.cessna.positions, 3))
+    nextGeometry.setAttribute('aDirection', new THREE.Float32BufferAttribute(particleData.fighter.directions, 3))
+    nextGeometry.setAttribute('aTargetDirection', new THREE.Float32BufferAttribute(particleData.cessna.directions, 3))
+    nextGeometry.setAttribute('aRandom', new THREE.Float32BufferAttribute(particleData.fighter.randoms, 1))
     nextGeometry.computeBoundingSphere()
     return nextGeometry
   }, [particleData])
@@ -173,3 +178,4 @@ export default function AircraftParticleSection() {
 }
 
 useGLTF.preload(fighterModelUrl)
+useGLTF.preload(cessnaModelUrl)

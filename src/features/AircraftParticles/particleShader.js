@@ -6,7 +6,9 @@ uniform float uPixelRatio;
 uniform float uTurbulence;
 uniform float uHoverStrength;
 
+attribute vec3 aTarget;
 attribute vec3 aDirection;
+attribute vec3 aTargetDirection;
 attribute float aRandom;
 
 varying float vAlpha;
@@ -34,27 +36,35 @@ float noise(vec3 point) {
 
 void main() {
   float time = uTime * 0.55;
-  float entrance = smoothstep(0.12, 0.42, uProgress);
-  float dispersion = smoothstep(0.3, 0.92, uProgress);
+  float morph = smoothstep(0.56, 0.92, uProgress);
+  float morphWindow = smoothstep(0.34, 0.57, uProgress) * (1.0 - smoothstep(0.72, 0.94, uProgress));
+  float dissolve = smoothstep(0.22, 0.5, uProgress) * (1.0 - smoothstep(0.78, 0.96, uProgress));
   float activity = 0.018 + uTurbulence * 0.012;
-  float n = noise(position * 1.7 + vec3(time * 0.35, time * 0.2, -time * 0.3)) - 0.5;
+  vec3 basePosition = mix(position, aTarget, morph);
+  vec3 baseDirection = normalize(mix(aDirection, aTargetDirection, morph));
+  float n = noise(basePosition * 1.7 + vec3(time * 0.35, time * 0.2, -time * 0.3)) - 0.5;
 
-  vec3 finalPosition = position;
-  finalPosition += aDirection * n * activity;
+  vec3 finalPosition = basePosition;
+  finalPosition += baseDirection * n * activity;
   finalPosition += vec3(
     sin(time + aRandom * 19.0) * activity * 0.6,
     cos(time * 1.17 + aRandom * 13.0) * activity * 0.5,
     sin(time * 0.8 + aRandom * 23.0) * activity * 0.4
   );
 
-  float mouseDistance = distance(position.xy, uMouse * 2.0);
+  float mouseDistance = distance(basePosition.xy, uMouse * 2.0);
   float mouseInfluence = (1.0 - smoothstep(0.15, 1.8, mouseDistance)) * uHoverStrength;
-  vec3 mouseDirection = normalize(vec3(position.xy - uMouse * 2.0, aDirection.z * 0.35) + vec3(0.0001));
+  vec3 mouseDirection = normalize(vec3(basePosition.xy - uMouse * 2.0, baseDirection.z * 0.35) + vec3(0.0001));
   finalPosition += mouseDirection * mouseInfluence * 0.07;
 
-  float dissolve = dispersion * (0.12 + aRandom * 0.2);
-  finalPosition += aDirection * dissolve;
-  finalPosition += aDirection * n * dispersion * 0.22;
+  float shapeChange = morphWindow * (0.18 + aRandom * 0.5);
+  finalPosition += baseDirection * shapeChange;
+  finalPosition += baseDirection * n * (dissolve * 0.3 + morphWindow * 0.42);
+  finalPosition += vec3(
+    sin(time * 1.2 + aRandom * 31.0) * morphWindow * 0.16,
+    cos(time + aRandom * 17.0) * morphWindow * 0.12,
+    sin(time * 0.8 + aRandom * 11.0) * morphWindow * 0.16
+  );
   finalPosition.y += sin(time * 1.4) * 0.025;
 
   vec4 mvPosition = modelViewMatrix * vec4(finalPosition, 1.0);
@@ -62,8 +72,8 @@ void main() {
   gl_PointSize = (2.15 + aRandom * 1.35) * uPixelRatio;
   gl_PointSize *= clamp(5.6 / -mvPosition.z, 0.7, 1.8);
 
-  vAlpha = 0.7 + aRandom * 0.3 - dispersion * 0.08;
-  vGlow = 0.25 + mouseInfluence * 0.8 + entrance * 0.12;
+  vAlpha = 0.7 + aRandom * 0.3 - morphWindow * 0.12;
+  vGlow = 0.25 + mouseInfluence * 0.8 + morphWindow * 0.2;
 }
 `
 
