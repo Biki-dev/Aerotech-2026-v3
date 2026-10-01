@@ -1,13 +1,21 @@
 .aircraft-particle-section {
   position: relative;
-  overflow-x: hidden;
-  padding: 2rem 0 6rem;
+  min-height: 180vh;
+  overflow-x: clip;
+  padding: 0;
   background: #FBFAF6;
   color: #111827;
 }
 
 .aircraft-particle-shell {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100svh;
   width: min(1180px, calc(100% - 48px));
+  padding: 2rem 0 3rem;
   margin: 0 auto;
 }
 
@@ -142,11 +150,12 @@
 
 @media (max-width: 700px) {
   .aircraft-particle-section {
-    padding: 1.5rem 0 3.75rem;
+    min-height: 170svh;
   }
 
   .aircraft-particle-shell {
     width: min(100% - 24px, 720px);
+    padding: 1.5rem 0 2rem;
   }
 
   .aircraft-particle-layout {

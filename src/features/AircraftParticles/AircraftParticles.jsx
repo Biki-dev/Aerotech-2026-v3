@@ -122,7 +122,7 @@ export default function AircraftParticleSection() {
       const rect = section.getBoundingClientRect()
       const viewportHeight = window.innerHeight || 1
       setScrollProgress(THREE.MathUtils.clamp(
-        (viewportHeight - rect.top) / (rect.height + viewportHeight * 0.65),
+        (viewportHeight - rect.top) / rect.height,
         0,
         1,
       ))
