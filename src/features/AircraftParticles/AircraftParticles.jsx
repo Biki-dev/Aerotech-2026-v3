@@ -142,18 +142,24 @@ export default function AircraftParticleSection() {
       <div className="aircraft-particle-shell">
         <div className="aircraft-particle-layout">
           <div className="aircraft-particle-copy">
-            <span className="aircraft-particle-kicker">ABOUT AEROTECH</span>
+            <span className="aircraft-particle-kicker">AEROTECH / 2026</span>
             <h2 id="aircraft-particle-title" className="aircraft-particle-title">
-              BUILT FOR
-              <br />
-              MOTION
+              ABOUT
             </h2>
-            <p className="aircraft-particle-description">
-              AeroTech brings curious minds together to build, test, and share the ideas that move flight forward. This particle aircraft is a small study in precision, motion, and the energy behind every takeoff.
-            </p>
+            <div className="aircraft-particle-description">
+              <p>
+                Aerotech is the flagship aeromodelling workshop and competition — a convergence of innovation, engineering, and the boundless sky.
+              </p>
+              <p>
+                From hands-on aeromodelling workshops to building and flying model aircraft, from keynote sessions by chief guests from the industry to exciting competitions — Aerotech brings together the brightest minds who dare to take flight.
+              </p>
+              <p>
+                Now in its 2026 edition, Aerotech continues to grow as a platform where future aeromodelling enthusiasts are born, ideas take flight, and innovation is celebrated.
+              </p>
+            </div>
             <div className="aircraft-particle-copy-meta">
               <span>01</span>
-              <span>FLIGHT / FORM / FUTURE</span>
+              <span>WORKSHOP / COMPETITION / FLIGHT</span>
             </div>
           </div>
 
