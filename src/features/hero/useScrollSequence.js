@@ -31,8 +31,20 @@ export function useScrollSequence() {
 
       const image = new Image()
       const promise = new Promise((resolve) => {
-        image.onload = () => resolve(image)
-        image.onerror = () => resolve(null)
+        image.onload = () => {
+          if (safeIndex === 0) {
+            window.__aerotechHeroReady = true
+            window.dispatchEvent(new Event('aerotech:hero-ready'))
+          }
+          resolve(image)
+        }
+        image.onerror = () => {
+          if (safeIndex === 0) {
+            window.__aerotechHeroReady = true
+            window.dispatchEvent(new Event('aerotech:hero-ready'))
+          }
+          resolve(null)
+        }
       })
 
       frames[safeIndex] = { image, promise }

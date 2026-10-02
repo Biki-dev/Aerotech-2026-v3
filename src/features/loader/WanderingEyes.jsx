@@ -61,6 +61,14 @@ function waitForPaint() {
   })
 }
 
+function waitForCriticalAsset(eventName, readyFlag) {
+  if (window[readyFlag]) return Promise.resolve()
+
+  return new Promise((resolve) => {
+    window.addEventListener(eventName, resolve, { once: true })
+  })
+}
+
 function PageLoader() {
   const [visible, setVisible] = useState(true)
   const [mounted, setMounted] = useState(true)
@@ -79,7 +87,11 @@ function PageLoader() {
         return bounds.top < window.innerHeight && bounds.bottom > 0
       })
 
-      await Promise.all(images.map(waitForImage))
+      await Promise.all([
+        ...images.map(waitForImage),
+        waitForCriticalAsset('aerotech:hero-ready', '__aerotechHeroReady'),
+        waitForCriticalAsset('aerotech:aircraft-ready', '__aerotechAircraftReady'),
+      ])
       await waitForPaint()
 
       const minimumDisplayTime = 500
