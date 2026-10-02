@@ -15,13 +15,15 @@ function App() {
   return (
     <>
       <PageLoader />
-      <Hero />
-      <Timeline />
-      <Sponsors />
-      <AircraftParticleSection />
-      <CoreTeam />
-      <Gallery />
-      <Footer />
+      <main id="main-content">
+        <Hero />
+        <Timeline />
+        <Sponsors />
+        <AircraftParticleSection />
+        <CoreTeam />
+        <Gallery />
+        <Footer />
+      </main>
       <LineSidebar
         items={navigationItems}
         sectionIds={sectionIds}

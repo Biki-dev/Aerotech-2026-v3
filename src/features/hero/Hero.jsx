@@ -31,7 +31,7 @@ function Hero() {
   }, [isMobile])
 
   return (
-    <main className="hero-page" ref={trackRef}>
+    <section className="hero-page" ref={trackRef}>
       <section id="home" className="hero" aria-labelledby="hero-title">
         <canvas className="hero-canvas" ref={canvasRef} aria-hidden="true" />
         {!isMobile && showHalftone && (
@@ -70,7 +70,7 @@ function Hero() {
           </a>
         </div>
       </section>
-    </main>
+    </section>
   )
 }
 

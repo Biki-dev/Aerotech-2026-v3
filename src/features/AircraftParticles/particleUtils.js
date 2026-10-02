@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 
-export const PARTICLE_COUNT_DESKTOP = 60000
-export const PARTICLE_COUNT_MOBILE = 24000
+export const PARTICLE_COUNT_DESKTOP = 36000
+export const PARTICLE_COUNT_MOBILE = 14000
 const NORMALIZED_AIRCRAFT_SIZE = 4.8
 
 function createRandom(seed = 0x9e3779b9) {
@@ -17,7 +17,6 @@ function createRandom(seed = 0x9e3779b9) {
 function emptyParticleData() {
   return {
     positions: new Float32Array(0),
-    basePositions: new Float32Array(0),
     directions: new Float32Array(0),
     randoms: new Float32Array(0),
     bounds: new THREE.Box3(),
@@ -73,7 +72,6 @@ export function buildAircraftParticleData(model, particleCount = PARTICLE_COUNT_
   if (!vertices.length || totalArea <= 0) return emptyParticleData()
 
   const positions = new Float32Array(particleCount * 3)
-  const basePositions = new Float32Array(particleCount * 3)
   const directions = new Float32Array(particleCount * 3)
   const randoms = new Float32Array(particleCount)
   const center = bounds.getCenter(new THREE.Vector3())
@@ -107,9 +105,6 @@ export function buildAircraftParticleData(model, particleCount = PARTICLE_COUNT_
     positions[offset] = x
     positions[offset + 1] = y
     positions[offset + 2] = z
-    basePositions[offset] = x
-    basePositions[offset + 1] = y
-    basePositions[offset + 2] = z
 
     direction.set(x, y, z)
     if (direction.lengthSq() < 1e-8) direction.set(0, 1, 0)
@@ -120,5 +115,5 @@ export function buildAircraftParticleData(model, particleCount = PARTICLE_COUNT_
     randoms[particle] = random()
   }
 
-  return { positions, basePositions, directions, randoms, bounds }
+  return { positions, directions, randoms, bounds }
 }
