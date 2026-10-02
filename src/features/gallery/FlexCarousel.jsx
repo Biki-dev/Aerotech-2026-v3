@@ -1241,6 +1241,7 @@ const FlexCarousel = ({
     <div
       ref={containerRef}
       className={`flex-carousel ${className}`.trim()}
+      data-lenis-prevent
       style={{ ...style, '--flex-carousel-half': `${Math.min(Math.max(cardHeight, 0.05), 1) * 50}%` }}
       role="region"
       aria-roledescription="carousel"
