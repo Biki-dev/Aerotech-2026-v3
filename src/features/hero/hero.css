@@ -23,6 +23,12 @@
   pointer-events: none;
 }
 
+.hero-halftone {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+}
+
 .hero::after {
   position: absolute;
   z-index: -1;

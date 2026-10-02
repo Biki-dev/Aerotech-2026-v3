@@ -1,4 +1,5 @@
 import './hero.css'
+import HalftoneReveal from './HalftoneReveal.jsx'
 import { useScrollSequence } from './useScrollSequence.js'
 
 function Hero() {
@@ -8,6 +9,17 @@ function Hero() {
     <main className="hero-page" ref={trackRef}>
       <section className="hero" aria-labelledby="hero-title">
         <canvas className="hero-canvas" ref={canvasRef} aria-hidden="true" />
+        <HalftoneReveal
+          sourceCanvasRef={canvasRef}
+          className="hero-halftone"
+          inkColor="#292830"
+          paperColor="#FBFAF6"
+          mode="mono"
+          dotDensity={94}
+          angle={28}
+          revealRadius={0.3}
+          borderRadius="0"
+        />
         <div className="hero-copy">
           <img
             className="eyebrow"
