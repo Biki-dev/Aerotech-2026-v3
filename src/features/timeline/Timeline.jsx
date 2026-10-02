@@ -12,13 +12,13 @@ import BranchedMenu from './BranchedMenu.jsx'
 import './timeline.css'
 
 const timelineItems = [
-  { time: '10:00 AM', title: 'Opening Ceremony', description: 'Welcome address and official inauguration of Aerotech 2026.', day: 'DAY 1 — FEB 25', icon: Flag02Icon },
-  { time: '10:30 AM', title: 'Aero Modeling Workshop', description: 'Hands-on workshop covering the fundamentals of aero modeling, aerodynamics, and aircraft design.', day: 'DAY 1 — FEB 25', icon: School01Icon },
-  { time: '11:30 AM', title: 'Materials & Kit Distribution', description: 'Teams receive their building materials and kits to begin constructing their aircraft.', day: 'DAY 1 — FEB 25', icon: PackageIcon },
-  { time: '12:00 PM', title: 'Build Phase Begins', description: 'Students start designing and building their model airplanes using the provided kits.', day: 'DAY 1 — FEB 25', icon: ConstructionIcon },
-  { time: '10:00 AM', title: 'Flight Testing', description: 'Teams test-fly their built aircraft. Performance is evaluated on distance, stability, and design.', day: 'DAY 2 — FEB 26', icon: Settings02Icon },
-  { time: '01:00 PM', title: 'Top Teams Competition', description: 'The best-performing teams compete head-to-head for the top positions.', day: 'DAY 2 — FEB 26', icon: Rocket01Icon },
-  { time: '03:00 PM', title: 'Results & Awards Ceremony', description: 'Winners are announced and prizes are distributed. Closing of Aerotech 2026.', day: 'DAY 2 — FEB 26', icon: Award01Icon },
+  { time: '10:00 AM', title: 'Opening Ceremony', description: 'Welcome address and official inauguration of Aerotech 2026.', day: 'DAY 1 — OCT 09', icon: Flag02Icon },
+  { time: '10:30 AM', title: 'Aero Modeling Workshop', description: 'Hands-on workshop covering the fundamentals of aero modeling, aerodynamics, and aircraft design.', day: 'DAY 1 — OCT 09', icon: School01Icon },
+  { time: '11:30 AM', title: 'Materials & Kit Distribution', description: 'Teams receive their building materials and kits to begin constructing their aircraft.', day: 'DAY 1 — OCT 09', icon: PackageIcon },
+  { time: '12:00 PM', title: 'Build Phase Begins', description: 'Students start designing and building their model airplanes using the provided kits.', day: 'DAY 1 — OCT 09', icon: ConstructionIcon },
+  { time: '10:00 AM', title: 'Flight Testing', description: 'Teams test-fly their built aircraft. Performance is evaluated on distance, stability, and design.', day: 'DAY 2 — OCT 10', icon: Settings02Icon },
+  { time: '01:00 PM', title: 'Top Teams Competition', description: 'The best-performing teams compete head-to-head for the top positions.', day: 'DAY 2 — OCT 10', icon: Rocket01Icon },
+  { time: '03:00 PM', title: 'Results & Awards Ceremony', description: 'Winners are announced and prizes are distributed. Closing of Aerotech 2026.', day: 'DAY 2 — OCT 10', icon: Award01Icon },
 ]
 
 const groupedTimeline = Array.from(
