@@ -165,21 +165,39 @@ export default function CoreTeam() {
 
   useEffect(() => {
     let frame = 0
+    let targetProgress = 0
+    let currentProgress = 0
+    let lastTimestamp = 0
+
+    const animateProgress = (timestamp) => {
+      const delta = lastTimestamp ? Math.min((timestamp - lastTimestamp) / 1000, 0.05) : 1 / 60
+      lastTimestamp = timestamp
+      currentProgress = THREE.MathUtils.damp(currentProgress, targetProgress, 10, delta)
+
+      if (Math.abs(targetProgress - currentProgress) < 0.0005) {
+        currentProgress = targetProgress
+        frame = 0
+        lastTimestamp = 0
+      } else {
+        frame = requestAnimationFrame(animateProgress)
+      }
+
+      setProgress(currentProgress)
+    }
+
     const updateProgress = () => {
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => {
-        const section = sectionRef.current
-        if (!section) return
-        const distance = section.offsetHeight - window.innerHeight
-        setProgress(THREE.MathUtils.clamp(-section.getBoundingClientRect().top / Math.max(distance, 1), 0, 1))
-      })
+      const section = sectionRef.current
+      if (!section) return
+      const distance = section.offsetHeight - window.innerHeight
+      targetProgress = THREE.MathUtils.clamp(-section.getBoundingClientRect().top / Math.max(distance, 1), 0, 1)
+      if (!frame) frame = requestAnimationFrame(animateProgress)
     }
 
     updateProgress()
     window.addEventListener('scroll', updateProgress, { passive: true })
     window.addEventListener('resize', updateProgress)
     return () => {
-      cancelAnimationFrame(frame)
+      if (frame) cancelAnimationFrame(frame)
       window.removeEventListener('scroll', updateProgress)
       window.removeEventListener('resize', updateProgress)
     }
