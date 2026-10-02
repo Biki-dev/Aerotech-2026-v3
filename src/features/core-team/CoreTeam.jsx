@@ -26,7 +26,6 @@ function imageCover(texture, width, height) {
 
   const imageRatio = image.width / image.height
   const frameRatio = width / height
-  texture.colorSpace = THREE.SRGBColorSpace
   texture.wrapS = THREE.ClampToEdgeWrapping
   texture.wrapT = THREE.ClampToEdgeWrapping
   texture.repeat.set(1, 1)
@@ -49,13 +48,18 @@ function imageCover(texture, width, height) {
 function PortraitScene({ progress, stageRef, featuredRef, collectionRefs, finalRefs }) {
   const textures = useTexture(members.map((member) => member.image))
   const meshes = useRef([])
-  const materials = useMemo(() => textures.map((texture) => new THREE.MeshBasicMaterial({
-    map: texture,
-    transparent: true,
-    opacity: 0,
-    depthWrite: false,
-    toneMapped: false,
-  })), [textures])
+  const materials = useMemo(() => textures.map((texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace
+    texture.needsUpdate = true
+
+    return new THREE.MeshBasicMaterial({
+      map: texture,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+      toneMapped: false,
+    })
+  }), [textures])
 
   useEffect(() => () => materials.forEach((material) => material.dispose()), [materials])
 
