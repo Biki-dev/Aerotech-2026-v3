@@ -4,7 +4,7 @@ const FRAME_COUNT = 152
 const FRAME_EXTENSION = 'webp'
 const PREFETCH_RADIUS = 2
 
-export function useScrollSequence() {
+export function useScrollSequence(isMobile = false) {
   const canvasRef = useRef(null)
   const trackRef = useRef(null)
 
@@ -107,6 +107,11 @@ export function useScrollSequence() {
     }
 
     const updateTargetFrame = () => {
+      if (isMobile) {
+        targetFrame = 0
+        return
+      }
+
       const trackTop = track.getBoundingClientRect().top + window.scrollY
       const scrollDistance = Math.max(1, track.offsetHeight - window.innerHeight)
       const progress = Math.max(0, Math.min(1, (window.scrollY - trackTop) / scrollDistance))
@@ -134,27 +139,36 @@ export function useScrollSequence() {
 
     const resizeObserver = new ResizeObserver(resizeCanvas)
     resizeObserver.observe(canvas)
-    window.addEventListener('scroll', updateTargetFrame, { passive: true })
-    window.addEventListener('resize', updateTargetFrame, { passive: true })
+    if (!isMobile) {
+      window.addEventListener('scroll', updateTargetFrame, { passive: true })
+      window.addEventListener('resize', updateTargetFrame, { passive: true })
+    }
 
     resizeCanvas()
-    loadFrame(0)
+    const firstFramePromise = loadFrame(0)
+    if (isMobile) {
+      firstFramePromise.then((image) => {
+        if (!disposed && image) drawFrame(0)
+      })
+    }
     updateTargetFrame()
-    animationFrameId = window.requestAnimationFrame(renderLoop)
+    if (!isMobile) animationFrameId = window.requestAnimationFrame(renderLoop)
 
-    if ('requestIdleCallback' in window) {
+    if (!isMobile && 'requestIdleCallback' in window) {
       idlePrefetchId = window.requestIdleCallback(() => queueNearbyFrames(Math.round(targetFrame)), { timeout: 1500 })
     }
 
     return () => {
       disposed = true
-      window.cancelAnimationFrame(animationFrameId)
+      if (animationFrameId) window.cancelAnimationFrame(animationFrameId)
       if (idlePrefetchId && 'cancelIdleCallback' in window) window.cancelIdleCallback(idlePrefetchId)
-      window.removeEventListener('scroll', updateTargetFrame)
-      window.removeEventListener('resize', updateTargetFrame)
+      if (!isMobile) {
+        window.removeEventListener('scroll', updateTargetFrame)
+        window.removeEventListener('resize', updateTargetFrame)
+      }
       resizeObserver.disconnect()
     }
-  }, [])
+  }, [isMobile])
 
   return { canvasRef, trackRef }
 }

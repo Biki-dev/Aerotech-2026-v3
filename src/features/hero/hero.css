@@ -140,6 +140,10 @@
 }
 
 @media (max-width: 600px) {
+  .hero-page {
+    min-height: 100svh;
+  }
+
   .hero {
     min-height: 100svh;
   }

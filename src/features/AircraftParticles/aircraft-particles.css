@@ -107,10 +107,12 @@
 
 @media (max-width: 700px) {
   .aircraft-particle-section {
-    min-height: 280svh;
+    min-height: auto;
   }
 
   .aircraft-particle-shell {
+    position: static;
+    min-height: auto;
     width: min(100% - 24px, 720px);
     padding: 1.5rem 0 2rem;
   }
@@ -139,6 +141,6 @@
   }
 
   .aircraft-particle-stage {
-    height: clamp(340px, 84vw, 500px);
+    display: none;
   }
 }

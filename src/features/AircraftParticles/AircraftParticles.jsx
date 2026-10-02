@@ -120,8 +120,27 @@ function AircraftScene({ scrollProgress }) {
 export default function AircraftParticleSection() {
   const sectionRef = useRef(null)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [isMobile, setIsMobile] = useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 700px)').matches
+  ))
 
   useEffect(() => {
+    const mobileQuery = window.matchMedia('(max-width: 700px)')
+    const updateMobileState = () => setIsMobile(mobileQuery.matches)
+    mobileQuery.addEventListener('change', updateMobileState)
+    return () => mobileQuery.removeEventListener('change', updateMobileState)
+  }, [])
+
+  useEffect(() => {
+    if (isMobile) return undefined
+    useGLTF.preload(fighterModelUrl)
+    useGLTF.preload(cessnaModelUrl)
+    return undefined
+  }, [isMobile])
+
+  useEffect(() => {
+    if (isMobile) return undefined
+
     const updateProgress = () => {
       const section = sectionRef.current
       if (!section) return
@@ -141,7 +160,7 @@ export default function AircraftParticleSection() {
       window.removeEventListener('scroll', updateProgress)
       window.removeEventListener('resize', updateProgress)
     }
-  }, [])
+  }, [isMobile])
 
   return (
     <section id="about" className="aircraft-particle-section" ref={sectionRef} aria-labelledby="aircraft-particle-title">
@@ -170,7 +189,7 @@ export default function AircraftParticleSection() {
 
           <div className="aircraft-particle-visual">
             <div className="aircraft-particle-stage">
-              <AircraftScene scrollProgress={scrollProgress} />
+              {!isMobile && <AircraftScene scrollProgress={scrollProgress} />}
             </div>
           </div>
         </div>
@@ -178,6 +197,3 @@ export default function AircraftParticleSection() {
     </section>
   )
 }
-
-useGLTF.preload(fighterModelUrl)
-useGLTF.preload(cessnaModelUrl)

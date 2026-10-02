@@ -5,9 +5,9 @@ import { useScrollSequence } from './useScrollSequence.js'
 const HalftoneReveal = lazy(() => import('./HalftoneReveal.jsx'))
 
 function Hero() {
-  const { canvasRef, trackRef } = useScrollSequence()
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 600px)').matches)
   const [showHalftone, setShowHalftone] = useState(false)
+  const { canvasRef, trackRef } = useScrollSequence(isMobile)
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 600px)')
