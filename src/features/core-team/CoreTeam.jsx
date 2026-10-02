@@ -5,14 +5,14 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import './core-team.css'
 
 const members = [
-  { name: 'Amlanjyoti', role: 'Aerotech Head', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
+  { name: 'Amlanjyoti', role: 'Aerotech Head', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790924516/IMG_20260626_102409_1_-removebg-preview_1_rgnood.png' },
   { name: 'Biki', role: 'Technical', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091182/ChatGPT_Image_Sep_21_2026_01_03_58_PM_fpgswf.png' },
   { name: 'Ipshita', role: 'PR', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790092212/IMG_20260913_135616.jpg_1_-Photoroom_gnajgs.png' },
   { name: 'Tushar', role: 'Motion', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790092148/IMG_20260913_135743.jpg_3_-Photoroom_obhudj.png' },
-  { name: 'Akashdeep', role: 'Finance', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091046/IMG_1114_1_-Photoroom_u0oywd.png' },
-  { name: 'Himanshu', role: 'Management', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091120/ChatGPT_Image_Sep_21_2026_02_08_34_PM_xqg3r5.png' },
-  { name: 'Swapnali', role: 'Graphics', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790092261/IMG_20260913_140201.jpg_2_-removebg-preview_fiqkk2.png' },
-  { name: 'Mung Chung', role: 'Content Manager', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790090973/EVENT_HEAD-removebg-preview_tluflu.png' },
+  { name: 'Akashdeep', role: 'Finance', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790925255/IMG_2900_1_-Photoroom_j4jvek.png' },
+  { name: 'Himanshu', role: 'Management', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790924172/ChatGPT_Image_Sep_21_2026_02_08_34_PM_xqg3r5.png' },
+  { name: 'Swapnali', role: 'Graphics', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790924036/WhatsApp_Image_2026-10-02_at_11.45.33-removebg-preview_b0psjf.png' },
+  { name: 'Mung Chung', role: 'Content Manager', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790924636/WhatsApp_Image_2026-10-02_at_11.13.16-removebg-preview_jm5ndz.png' },
 ]
 
 const INTRO_END = 0.76
