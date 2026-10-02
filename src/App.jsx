@@ -6,6 +6,7 @@ import CoreTeam from './features/core-team/CoreTeam.jsx'
 import Gallery from './features/gallery/Gallery.jsx'
 import Footer from './features/footer/Footer.jsx'
 import LineSidebar from './features/navigation/LineSidebar.jsx'
+import { PageLoader } from './features/loader/WanderingEyes.jsx'
 
 const navigationItems = ['Home', 'Timeline', 'Sponsors', 'About', 'Team', 'Gallery', 'Contact']
 const sectionIds = ['home', 'timeline', 'sponsors', 'about', 'team', 'gallery', 'contact']
@@ -13,6 +14,7 @@ const sectionIds = ['home', 'timeline', 'sponsors', 'about', 'team', 'gallery', 
 function App() {
   return (
     <>
+      <PageLoader />
       <Hero />
       <Timeline />
       <Sponsors />

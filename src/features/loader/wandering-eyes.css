@@ -1,0 +1,100 @@
+.page-loader {
+  position: fixed;
+  z-index: 10000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: #fbfaf6;
+  color: #292830;
+  opacity: 1;
+  transition: opacity 420ms ease;
+}
+
+.page-loader--leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page-loader__content {
+  display: grid;
+  justify-items: center;
+  gap: 19px;
+}
+
+.page-loader__label {
+  color: #77756e;
+  font-family: var(--font-brand, sans-serif);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.wandering-eyes {
+  container-type: size;
+  display: inline-flex;
+  width: 120px;
+  aspect-ratio: 9 / 4;
+  align-items: center;
+  justify-content: center;
+  color: #292830;
+  vertical-align: middle;
+}
+
+.wandering-eyes__pair {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--eyes-gap);
+}
+
+.wandering-eyes__eye {
+  display: inline-block;
+  width: var(--eyes-size);
+  height: var(--eyes-size);
+  border-radius: 50%;
+  background-color: color-mix(in srgb, currentColor 16%, transparent);
+  background-image: radial-gradient(
+    circle calc(var(--eyes-size) * var(--eyes-pupil-scale)),
+    currentColor 100%,
+    transparent 0
+  );
+  background-repeat: no-repeat;
+  animation:
+    wandering-eyes-move var(--eyes-duration, 10s) infinite,
+    wandering-eyes-blink var(--eyes-duration, 10s) infinite;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+@keyframes wandering-eyes-move {
+  0%, 10%, 93%, 100% { background-position: 0 0; }
+  13%, 40% { background-position: calc(var(--eyes-size) * var(--eyes-travel-scale) * -1) 0; }
+  43%, 70% { background-position: calc(var(--eyes-size) * var(--eyes-travel-scale)) 0; }
+  73%, 90% { background-position: 0 calc(var(--eyes-size) * var(--eyes-travel-scale)); }
+}
+
+@keyframes wandering-eyes-blink {
+  0%, 10%, 12%, 20%, 22%, 40%, 42%, 60%, 62%, 70%, 72%, 90%, 92%, 98%, 100% {
+    height: var(--eyes-size);
+  }
+  11%, 21%, 41%, 61%, 71%, 91%, 99% {
+    height: calc(var(--eyes-size) * var(--eyes-blink-scale));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wandering-eyes__eye {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+  }
+
+  .page-loader {
+    transition-duration: 0.01ms;
+  }
+}
