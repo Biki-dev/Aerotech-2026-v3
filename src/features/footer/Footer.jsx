@@ -16,10 +16,6 @@ export default function Footer() {
         <span>@aerotech</span>
       </a>
 
-      <div className="footer-word-wrap footer-word-wrap--ghost">
-        <h2 className="footer-word">AEROTECH</h2>
-      </div>
-
       <div className="footer-word-wrap footer-word-wrap--main">
         <h2 className="footer-word">AEROTECH</h2>
       </div>
