@@ -4,6 +4,7 @@ import Sponsors from './features/sponsors/Sponsors.jsx'
 import AircraftParticleSection from './features/AircraftParticles/AircraftParticles.jsx'
 import CoreTeam from './features/core-team/CoreTeam.jsx'
 import Gallery from './features/gallery/Gallery.jsx'
+import Footer from './features/footer/Footer.jsx'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <AircraftParticleSection />
       <CoreTeam />
       <Gallery />
+      <Footer />
     </>
   )
 }
