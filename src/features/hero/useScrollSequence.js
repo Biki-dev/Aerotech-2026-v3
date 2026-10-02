@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react'
 
 const FRAME_COUNT = 152
+const FRAME_EXTENSION = 'webp'
+const PREFETCH_RADIUS = 2
 
 export function useScrollSequence() {
   const canvasRef = useRef(null)
@@ -21,9 +23,11 @@ export function useScrollSequence() {
     let lastDrawnFrame = -1
     let animationFrameId
     let disposed = false
+    let idlePrefetchId
 
     const loadFrame = (index) => {
-      if (frames[index]) return frames[index].promise
+      const safeIndex = Math.max(0, Math.min(FRAME_COUNT - 1, index))
+      if (frames[safeIndex]) return frames[safeIndex].promise
 
       const image = new Image()
       const promise = new Promise((resolve) => {
@@ -31,9 +35,16 @@ export function useScrollSequence() {
         image.onerror = () => resolve(null)
       })
 
-      frames[index] = { image, promise }
-      image.src = `/scroll-frames/frame_${String(index + 1).padStart(3, '0')}.png`
+      frames[safeIndex] = { image, promise }
+      image.decoding = 'async'
+      image.src = `/scroll-frames/frame_${String(safeIndex + 1).padStart(3, '0')}.${FRAME_EXTENSION}`
       return promise
+    }
+
+    const queueNearbyFrames = (index) => {
+      for (let offset = -PREFETCH_RADIUS; offset <= PREFETCH_RADIUS; offset += 1) {
+        loadFrame(index + offset)
+      }
     }
 
     const nearestLoadedFrame = (index) => {
@@ -88,7 +99,7 @@ export function useScrollSequence() {
       const scrollDistance = Math.max(1, track.offsetHeight - window.innerHeight)
       const progress = Math.max(0, Math.min(1, (window.scrollY - trackTop) / scrollDistance))
       targetFrame = progress * (FRAME_COUNT - 1)
-      loadFrame(Math.round(targetFrame))
+      queueNearbyFrames(Math.round(targetFrame))
     }
 
     const renderLoop = () => {
@@ -109,35 +120,24 @@ export function useScrollSequence() {
       animationFrameId = window.requestAnimationFrame(renderLoop)
     }
 
-    const preloadFrames = async () => {
-      await loadFrame(0)
-      if (disposed) return
-
-      let nextFrame = 1
-      const worker = async () => {
-        while (!disposed && nextFrame < FRAME_COUNT) {
-          const index = nextFrame
-          nextFrame += 1
-          await loadFrame(index)
-        }
-      }
-
-      await Promise.all(Array.from({ length: 6 }, worker))
-    }
-
     const resizeObserver = new ResizeObserver(resizeCanvas)
     resizeObserver.observe(canvas)
     window.addEventListener('scroll', updateTargetFrame, { passive: true })
     window.addEventListener('resize', updateTargetFrame, { passive: true })
 
     resizeCanvas()
+    loadFrame(0)
     updateTargetFrame()
     animationFrameId = window.requestAnimationFrame(renderLoop)
-    preloadFrames()
+
+    if ('requestIdleCallback' in window) {
+      idlePrefetchId = window.requestIdleCallback(() => queueNearbyFrames(Math.round(targetFrame)), { timeout: 1500 })
+    }
 
     return () => {
       disposed = true
       window.cancelAnimationFrame(animationFrameId)
+      if (idlePrefetchId && 'cancelIdleCallback' in window) window.cancelIdleCallback(idlePrefetchId)
       window.removeEventListener('scroll', updateTargetFrame)
       window.removeEventListener('resize', updateTargetFrame)
       resizeObserver.disconnect()

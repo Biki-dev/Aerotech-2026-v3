@@ -170,6 +170,7 @@ export default function CoreTeam() {
   const collectionRefs = useRef([])
   const finalRefs = useRef([])
   const [progress, setProgress] = useState(0)
+  const [isNearViewport, setIsNearViewport] = useState(false)
 
   useEffect(() => {
     let frame = 0
@@ -220,6 +221,24 @@ export default function CoreTeam() {
       window.removeEventListener('scroll', updateProgress)
       window.removeEventListener('resize', updateProgress)
     }
+  }, [])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || !('IntersectionObserver' in window)) {
+      setIsNearViewport(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsNearViewport(true)
+        observer.disconnect()
+      }
+    }, { rootMargin: '1000px 0px' })
+
+    observer.observe(section)
+    return () => observer.disconnect()
   }, [])
 
   const introPosition = Math.min(progress / INTRO_END * members.length, members.length)
@@ -305,15 +324,17 @@ export default function CoreTeam() {
             <span>SCROLL TO EXPLORE</span>
           </div>
         </div>
-        <div className="core-team-canvas">
-          <PortraitCanvas
-            progress={progress}
-            stageRef={stageRef}
-            featuredRef={featuredRef}
-            collectionRefs={collectionRefs}
-            finalRefs={finalRefs}
-          />
-        </div>
+        {isNearViewport && (
+          <div className="core-team-canvas">
+            <PortraitCanvas
+              progress={progress}
+              stageRef={stageRef}
+              featuredRef={featuredRef}
+              collectionRefs={collectionRefs}
+              finalRefs={finalRefs}
+            />
+          </div>
+        )}
       </div>
     </section>
   )

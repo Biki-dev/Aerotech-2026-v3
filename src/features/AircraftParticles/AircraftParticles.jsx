@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from '@react-three/fiber'
 import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 
 const fighterModelUrl = new URL('../../assets/f-22.glb', import.meta.url).href
 const cessnaModelUrl = new URL('../../assets/cessna-172.glb', import.meta.url).href
@@ -106,7 +106,9 @@ function AircraftScene({ scrollProgress }) {
       gl={{ antialias: true, alpha: true }}
     >
       <color attach="background" args={['#FBFAF6']} />
-      <AircraftModel scrollProgress={scrollProgress} />
+      <Suspense fallback={null}>
+        <AircraftModel scrollProgress={scrollProgress} />
+      </Suspense>
     </Canvas>
   )
 }
@@ -114,6 +116,7 @@ function AircraftScene({ scrollProgress }) {
 export default function AircraftParticleSection() {
   const sectionRef = useRef(null)
   const [scrollProgress, setScrollProgress] = useState(0)
+  const [isNearViewport, setIsNearViewport] = useState(false)
 
   useEffect(() => {
     const updateProgress = () => {
@@ -135,6 +138,24 @@ export default function AircraftParticleSection() {
       window.removeEventListener('scroll', updateProgress)
       window.removeEventListener('resize', updateProgress)
     }
+  }, [])
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section || !('IntersectionObserver' in window)) {
+      setIsNearViewport(true)
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsNearViewport(true)
+        observer.disconnect()
+      }
+    }, { rootMargin: '1200px 0px' })
+
+    observer.observe(section)
+    return () => observer.disconnect()
   }, [])
 
   return (
@@ -164,7 +185,7 @@ export default function AircraftParticleSection() {
 
           <div className="aircraft-particle-visual">
             <div className="aircraft-particle-stage">
-              <AircraftScene scrollProgress={scrollProgress} />
+              {isNearViewport && <AircraftScene scrollProgress={scrollProgress} />}
             </div>
           </div>
         </div>
@@ -172,6 +193,3 @@ export default function AircraftParticleSection() {
     </section>
   )
 }
-
-useGLTF.preload(fighterModelUrl)
-useGLTF.preload(cessnaModelUrl)
