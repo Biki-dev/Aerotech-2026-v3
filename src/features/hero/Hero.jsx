@@ -31,7 +31,7 @@ function Hero() {
 
         <div className="hero-note">
           <p>From imagination to flight — be part of the innovation taking off at AeroTech 2026.</p>
-          <a className="hero-cta" href="#contact">
+          <a className="hero-cta" href="https://forms.gle/z39S2hrjK98vmJFCA">
             <span>Register Now</span>
             <span className="cta-arrow" aria-hidden="true">
               <svg viewBox="0 0 20 20" fill="none">
