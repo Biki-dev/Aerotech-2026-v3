@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import './hero.css'
-import HalftoneReveal from './HalftoneReveal.jsx'
 import { useScrollSequence } from './useScrollSequence.js'
+
+const HalftoneReveal = lazy(() => import('./HalftoneReveal.jsx'))
 
 function Hero() {
   const { canvasRef, trackRef } = useScrollSequence()
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 600px)').matches)
+  const [showHalftone, setShowHalftone] = useState(false)
 
   useEffect(() => {
     const mobileQuery = window.matchMedia('(max-width: 600px)')
@@ -14,27 +16,43 @@ function Hero() {
     return () => mobileQuery.removeEventListener('change', updateMobileState)
   }, [])
 
+  useEffect(() => {
+    if (isMobile) return undefined
+
+    let timeoutId
+    const reveal = () => setShowHalftone(true)
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(reveal, { timeout: 1800 })
+      return () => window.cancelIdleCallback(idleId)
+    }
+
+    timeoutId = window.setTimeout(reveal, 1200)
+    return () => window.clearTimeout(timeoutId)
+  }, [isMobile])
+
   return (
     <main className="hero-page" ref={trackRef}>
       <section id="home" className="hero" aria-labelledby="hero-title">
         <canvas className="hero-canvas" ref={canvasRef} aria-hidden="true" />
-        {!isMobile && (
-          <HalftoneReveal
-            sourceCanvasRef={canvasRef}
-            className="hero-halftone"
-            inkColor="#292830"
-            paperColor="#FBFAF6"
-            mode="mono"
-            dotDensity={94}
-            angle={28}
-            revealRadius={0.3}
-            borderRadius="0"
-          />
+        {!isMobile && showHalftone && (
+          <Suspense fallback={null}>
+            <HalftoneReveal
+              sourceCanvasRef={canvasRef}
+              className="hero-halftone"
+              inkColor="#292830"
+              paperColor="#FBFAF6"
+              mode="mono"
+              dotDensity={94}
+              angle={28}
+              revealRadius={0.3}
+              borderRadius="0"
+            />
+          </Suspense>
         )}
         <div className="hero-copy">
           <img
             className="eyebrow"
-            src="/aerotech_logo.png"
+            src="/aerotech_logo.webp"
             alt="Aerotech logo"
           />
           <h1 id="hero-title">WHERE CURIOSITY<br />MEETS INNOVATION</h1>

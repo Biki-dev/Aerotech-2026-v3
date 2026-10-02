@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aerotech-2026-v3.vercel.app/sitemap.xml
