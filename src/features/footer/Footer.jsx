@@ -5,7 +5,7 @@ export default function Footer() {
     <footer id="contact" className="footer-section" aria-label="Aerotech footer">
       <a
         className="footer-instagram"
-        href="https://www.instagram.com/aerotech/"
+        href="https://www.instagram.com/aerotech_aec/"
         target="_blank"
         rel="noreferrer"
         aria-label="Visit the Aerotech Instagram page"

@@ -72,7 +72,7 @@ function Sponsors() {
           </h3>
 
           <div className="runway">
-            <span className="runway__threshold" aria-hidden="true">09</span>
+            <span className="runway__threshold" aria-hidden="true"></span>
             {previousSponsors.map((sponsor, index) => (
               <div className="runway-slot" key={sponsor.name}>
                 <SponsorLogo
@@ -85,7 +85,7 @@ function Sponsors() {
                 </span>
               </div>
             ))}
-            <span className="runway__threshold runway__threshold--end" aria-hidden="true">27</span>
+            <span className="runway__threshold runway__threshold--end" aria-hidden="true"></span>
           </div>
         </div>
       </div>
