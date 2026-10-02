@@ -5,6 +5,10 @@ import AircraftParticleSection from './features/AircraftParticles/AircraftPartic
 import CoreTeam from './features/core-team/CoreTeam.jsx'
 import Gallery from './features/gallery/Gallery.jsx'
 import Footer from './features/footer/Footer.jsx'
+import LineSidebar from './features/navigation/LineSidebar.jsx'
+
+const navigationItems = ['Home', 'Timeline', 'Sponsors', 'About', 'Team', 'Gallery', 'Contact']
+const sectionIds = ['home', 'timeline', 'sponsors', 'about', 'team', 'gallery', 'contact']
 
 function App() {
   return (
@@ -16,6 +20,20 @@ function App() {
       <CoreTeam />
       <Gallery />
       <Footer />
+      <LineSidebar
+        items={navigationItems}
+        sectionIds={sectionIds}
+        accentColor="#d75b34"
+        textColor="#292830"
+        markerColor="#85837e"
+        markerLength={38}
+        markerGap={8}
+        itemGap={12}
+        fontSize={0.95}
+        maxShift={14}
+        smoothing={150}
+        defaultActive={0}
+      />
     </>
   )
 }

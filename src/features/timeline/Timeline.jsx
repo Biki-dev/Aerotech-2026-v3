@@ -48,7 +48,7 @@ function Timeline() {
   )
 
   return (
-    <section className="timeline-section" aria-labelledby="event-timeline-title">
+    <section id="timeline" className="timeline-section" aria-labelledby="event-timeline-title">
       <div className="timeline-shell">
         <header className="timeline-header">
           <span className="timeline-kicker">Event schedule</span>

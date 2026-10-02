@@ -37,7 +37,7 @@ function SponsorLogo({ src, alt, className }) {
 
 function Sponsors() {
   return (
-    <section className="sponsors-section" aria-labelledby="sponsors-title">
+    <section id="sponsors" className="sponsors-section" aria-labelledby="sponsors-title">
       <div className="sponsors-shell">
         <header className="sponsors-header">
           <span className="sponsors-kicker">With thanks</span>

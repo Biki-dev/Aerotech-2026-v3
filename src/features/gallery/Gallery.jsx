@@ -12,7 +12,7 @@ const galleryItems = [
 
 export default function Gallery() {
   return (
-    <section className="gallery-section" aria-labelledby="gallery-title">
+    <section id="gallery" className="gallery-section" aria-labelledby="gallery-title">
       <div className="gallery-shell">
         <header className="gallery-header">
           <span className="gallery-kicker">AEROTECH / 2026</span>

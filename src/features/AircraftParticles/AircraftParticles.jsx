@@ -138,7 +138,7 @@ export default function AircraftParticleSection() {
   }, [])
 
   return (
-    <section className="aircraft-particle-section" ref={sectionRef} aria-labelledby="aircraft-particle-title">
+    <section id="about" className="aircraft-particle-section" ref={sectionRef} aria-labelledby="aircraft-particle-title">
       <div className="aircraft-particle-shell">
         <div className="aircraft-particle-layout">
           <div className="aircraft-particle-copy">

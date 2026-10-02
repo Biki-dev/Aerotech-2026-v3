@@ -194,6 +194,7 @@ export default function CoreTeam() {
 
   return (
     <section
+      id="team"
       className="core-team-section"
       ref={sectionRef}
       aria-labelledby="core-team-title"

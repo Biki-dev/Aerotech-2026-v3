@@ -2,7 +2,7 @@ import './footer.css'
 
 export default function Footer() {
   return (
-    <footer className="footer-section" aria-label="Aerotech footer">
+    <footer id="contact" className="footer-section" aria-label="Aerotech footer">
       <a
         className="footer-instagram"
         href="https://www.instagram.com/aerotech/"

@@ -7,7 +7,7 @@ function Hero() {
 
   return (
     <main className="hero-page" ref={trackRef}>
-      <section className="hero" aria-labelledby="hero-title">
+      <section id="home" className="hero" aria-labelledby="hero-title">
         <canvas className="hero-canvas" ref={canvasRef} aria-hidden="true" />
         <HalftoneReveal
           sourceCanvasRef={canvasRef}
@@ -31,7 +31,7 @@ function Hero() {
 
         <div className="hero-note">
           <p>From imagination to flight — be part of the innovation taking off at AeroTech 2026.</p>
-          <a className="hero-cta" href="#get-started">
+          <a className="hero-cta" href="#contact">
             <span>Register Now</span>
             <span className="cta-arrow" aria-hidden="true">
               <svg viewBox="0 0 20 20" fill="none">
