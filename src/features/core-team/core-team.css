@@ -1,0 +1,273 @@
+.core-team-section {
+  position: relative;
+  min-height: 880vh;
+  overflow: clip;
+  background: #fbfaf6;
+  color: #111827;
+}
+
+.core-team-sticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  min-height: 100svh;
+  align-items: center;
+}
+
+.core-team-shell {
+  position: relative;
+  display: flex;
+  width: min(1180px, calc(100% - 48px));
+  min-height: 100svh;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 3rem 0;
+}
+
+.core-team-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: clamp(1.75rem, 4vw, 4rem);
+}
+
+.core-team-kicker,
+.core-team-count,
+.core-team-stage-label,
+.core-team-feature-index,
+.core-team-roster-label,
+.core-team-scroll-note {
+  color: rgba(17, 24, 39, 0.52);
+  font-family: var(--font-mono, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.core-team-header h2 {
+  flex: 1;
+  margin: 0;
+  color: #111827;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 7vw, 7.6rem);
+  font-weight: 300;
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+  text-align: center;
+}
+
+.core-team-layout {
+  display: grid;
+  grid-template-columns: minmax(270px, 0.9fr) minmax(440px, 1.1fr);
+  align-items: center;
+  gap: clamp(2rem, 6vw, 7rem);
+}
+
+.core-team-feature {
+  position: relative;
+  min-width: 0;
+}
+
+.core-team-feature-stage {
+  position: relative;
+  height: clamp(360px, 43vw, 540px);
+  overflow: visible;
+  background: radial-gradient(circle at 50% 42%, rgba(183, 198, 221, 0.42), transparent 54%);
+}
+
+.core-team-feature-stage::before {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(82%, 300px);
+  aspect-ratio: 0.8;
+  border: 1px solid rgba(17, 24, 39, 0.15);
+  content: '';
+  transform: translate(-50%, -50%) rotate(-4deg);
+}
+
+.core-team-feature-stage::after {
+  position: absolute;
+  right: 9%;
+  bottom: 8%;
+  width: 30%;
+  height: 1px;
+  background: rgba(17, 24, 39, 0.28);
+  content: '';
+}
+
+.core-team-canvas {
+  position: absolute !important;
+  inset: 0;
+  z-index: 1;
+}
+
+.core-team-stage-label {
+  position: absolute;
+  z-index: 2;
+  top: 5%;
+  left: 0;
+}
+
+.core-team-feature-copy {
+  position: relative;
+  z-index: 2;
+  margin-top: -2rem;
+  padding-left: 3.5rem;
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+.core-team-feature-copy.is-hidden {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+.core-team-feature-copy h3 {
+  margin: 0.55rem 0 0.25rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.7rem, 4.6vw, 5.5rem);
+  font-weight: 300;
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+}
+
+.core-team-feature-copy p {
+  margin: 0;
+  color: rgba(17, 24, 39, 0.58);
+  font-size: 1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.core-team-roster-wrap {
+  min-width: 0;
+}
+
+.core-team-roster {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  transform-origin: center;
+  transition: transform 180ms linear;
+}
+
+.core-team-card {
+  min-width: 0;
+  overflow: hidden;
+  background: rgba(17, 24, 39, 0.025);
+  border: 1px solid rgba(17, 24, 39, 0.17);
+  transition: background 450ms ease, border-color 450ms ease, transform 450ms ease;
+}
+
+.core-team-card.is-filled {
+  background: #e5e7e8;
+  border-color: rgba(17, 24, 39, 0.32);
+}
+
+.core-team-card-media {
+  display: grid;
+  aspect-ratio: 1.06 / 1;
+  place-items: center;
+  overflow: hidden;
+  background: linear-gradient(145deg, rgba(217, 224, 234, 0.42), rgba(17, 24, 39, 0.035));
+}
+
+.core-team-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: grayscale(1) contrast(1.03);
+  opacity: 0.92;
+  transition: transform 500ms ease, filter 500ms ease;
+}
+
+.core-team-card:hover .core-team-card-media img {
+  filter: grayscale(0);
+  transform: scale(1.04);
+}
+
+.core-team-card-media span {
+  color: rgba(17, 24, 39, 0.34);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 300;
+}
+
+.core-team-card-copy {
+  display: none;
+  padding: 0.75rem 0.85rem 0.9rem;
+}
+
+.is-final .core-team-card-copy {
+  display: block;
+}
+
+.core-team-card-copy h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1.7vw, 1.7rem);
+  font-weight: 400;
+  line-height: 0.95;
+}
+
+.core-team-card-copy p {
+  margin: 0.35rem 0 0;
+  color: rgba(17, 24, 39, 0.56);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.core-team-roster-label {
+  display: block;
+  margin-top: 1rem;
+  text-align: right;
+}
+
+.core-team-scroll-note {
+  position: absolute;
+  right: 0;
+  bottom: 1.7rem;
+}
+
+.core-team-scroll-note span {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: #111827;
+  font-size: 1.1rem;
+  transform: translateY(2px);
+}
+
+@media (max-width: 860px) {
+  .core-team-section { min-height: 900vh; }
+  .core-team-layout { grid-template-columns: minmax(210px, 0.8fr) minmax(330px, 1.2fr); gap: 1.5rem; }
+  .core-team-feature-stage { height: 390px; }
+  .core-team-feature-copy { padding-left: 1.2rem; }
+}
+
+@media (max-width: 680px) {
+  .core-team-section { min-height: 830vh; }
+  .core-team-shell { width: min(100% - 24px, 560px); padding: 1.5rem 0 3rem; }
+  .core-team-header { margin-bottom: 1.5rem; }
+  .core-team-header h2 { font-size: clamp(2.8rem, 13vw, 5rem); text-align: left; }
+  .core-team-kicker, .core-team-count { font-size: 8px; }
+  .core-team-layout { grid-template-columns: 1fr; gap: 1.2rem; }
+  .core-team-feature-stage { height: 340px; }
+  .core-team-feature-copy { margin-top: -1.4rem; padding-left: 1rem; }
+  .core-team-feature-copy h3 { font-size: clamp(2.5rem, 13vw, 4rem); }
+  .core-team-roster { gap: 7px; }
+  .core-team-card-media { aspect-ratio: 1 / 0.9; }
+  .core-team-roster-label { margin-top: 0.7rem; font-size: 8px; }
+  .core-team-scroll-note { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .core-team-card,
+  .core-team-card-media img,
+  .core-team-feature-copy,
+  .core-team-roster { transition: none; }
+}
