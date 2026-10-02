@@ -92,12 +92,15 @@ function PortraitScene({ progress, stageRef, featuredRef, collectionRefs, finalR
       const material = materials[index]
       const collectionFrame = getFrame(collectionRefs.current[index])
       const finalFrame = getFrame(finalRefs.current[index])
-      if (!mesh || !collectionFrame || !finalFrame || !featuredFrame) return
+      if (!mesh || !finalFrame) return
 
-      let frame = collectionFrame
+      let frame = finalFrame
       let opacity = 1
 
       if (progress < INTRO_END) {
+        if (!collectionFrame || !featuredFrame) return
+        frame = collectionFrame
+
         if (index < activeIndex) {
           frame = collectionFrame
         } else if (index === activeIndex) {
@@ -113,7 +116,8 @@ function PortraitScene({ progress, stageRef, featuredRef, collectionRefs, finalR
         } else {
           opacity = 0
         }
-      } else {
+      } else if (progress < LAYOUT_END) {
+        if (!collectionFrame) return
         frame = {
           x: THREE.MathUtils.lerp(collectionFrame.x, finalFrame.x, layoutProgress),
           y: THREE.MathUtils.lerp(collectionFrame.y, finalFrame.y, layoutProgress),
@@ -192,6 +196,17 @@ export default function CoreTeam() {
     const updateProgress = () => {
       const section = sectionRef.current
       if (!section) return
+
+      if (window.matchMedia('(max-width: 700px)').matches) {
+        targetProgress = 1
+        currentProgress = 1
+        lastTimestamp = 0
+        if (frame) cancelAnimationFrame(frame)
+        frame = 0
+        setProgress(1)
+        return
+      }
+
       const distance = section.offsetHeight - window.innerHeight
       targetProgress = THREE.MathUtils.clamp(-section.getBoundingClientRect().top / Math.max(distance, 1), 0, 1)
       if (!frame) frame = requestAnimationFrame(animateProgress)
