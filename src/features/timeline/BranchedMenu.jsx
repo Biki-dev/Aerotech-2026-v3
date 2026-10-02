@@ -71,10 +71,13 @@ export default function BranchedMenu({
   const heads = useRef([])
   const markerRef = useRef(null)
   const latest = useRef({})
-  latest.current = { onSelect, onToggle }
 
   const activeSection = items.findIndex((it) => it.children?.some((kid) => kid.value === active))
   const markerShown = activeSection >= 0 && open.has(activeSection)
+
+  useLayoutEffect(() => {
+    latest.current = { onSelect, onToggle }
+  }, [onSelect, onToggle])
 
   useLayoutEffect(() => {
     const place = (glide) => {
