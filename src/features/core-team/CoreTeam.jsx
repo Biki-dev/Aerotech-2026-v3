@@ -15,6 +15,8 @@ const members = [
   { name: 'Mung Chung', role: 'Content Manager', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790924636/WhatsApp_Image_2026-10-02_at_11.13.16-removebg-preview_jm5ndz.png' },
 ]
 
+useTexture.preload(members.map((member) => member.image))
+
 const INTRO_END = 0.76
 const LAYOUT_END = 0.86
 
