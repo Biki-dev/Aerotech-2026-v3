@@ -141,11 +141,12 @@
 
 @media (max-width: 600px) {
   .hero-page {
-    min-height: 100svh;
+    min-height: 86svh;
   }
 
   .hero {
-    min-height: 100svh;
+    height: 86svh;
+    min-height: 86svh;
   }
 
   .hero-copy {
