@@ -1,6 +1,6 @@
 .core-team-section {
   position: relative;
-  min-height: 820vh;
+  min-height: 1050svh;
   overflow: clip;
   background: #fbfaf6;
   color: #111827;
@@ -9,188 +9,222 @@
 .core-team-stage {
   position: sticky;
   top: 0;
-  min-height: 100svh;
+  height: 100svh;
+  min-height: 620px;
   overflow: hidden;
+  background:
+    radial-gradient(ellipse at 76% 52%, rgba(174, 196, 220, 0.2), transparent 39%),
+    #fbfaf6;
 }
 
 .core-team-shell {
   position: relative;
-  z-index: 2;
-  display: flex;
-  width: min(1180px, calc(100% - 48px));
-  min-height: 100svh;
-  flex-direction: column;
-  justify-content: center;
+  z-index: 1;
+  width: min(1280px, calc(100% - 72px));
+  height: 100%;
   margin: 0 auto;
-  padding: 3rem 0 4.5rem;
 }
 
 .core-team-header {
+  position: absolute;
+  z-index: 4;
+  top: 5.5svh;
+  left: 0;
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto;
   align-items: end;
-  gap: 1.5rem;
-  margin-bottom: clamp(1.6rem, 3vw, 3rem);
+  width: 100%;
+  padding-bottom: 14px;
 }
 
 .core-team-kicker,
 .core-team-index,
+.core-team-collection-label,
 .core-team-photo-mark,
 .core-team-member-number,
-.core-team-collection-label,
 .core-team-final-heading,
 .core-team-final-number,
 .core-team-scroll-note {
-  color: rgba(17, 24, 39, 0.52);
   font-family: var(--font-mono, monospace);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  line-height: 1.2;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
+.core-team-kicker {
+  grid-column: 1;
+  color: rgba(17, 24, 39, 0.55);
+}
+
 .core-team-header h2 {
-  margin: 0;
-  color: #111827;
+  grid-column: 1;
+  margin: 7px 0 0;
   font-family: var(--font-display);
-  font-size: clamp(3.25rem, 7vw, 7.4rem);
+  font-size: clamp(2.25rem, 4.1vw, 4.6rem);
   font-weight: 300;
-  line-height: 0.78;
-  letter-spacing: -0.065em;
-  white-space: nowrap;
+  line-height: 0.9;
 }
 
 .core-team-index {
-  justify-self: end;
-  padding-bottom: 0.25rem;
-  text-align: right;
+  grid-column: 2;
+  grid-row: 2;
+  padding-bottom: 4px;
+  color: rgba(17, 24, 39, 0.52);
 }
 
+/* ---------- INTRO LAYOUT: feature left, collection right ---------- */
+
 .core-team-layout {
-  position: relative;
+  position: absolute;
+  top: 19svh;
+  right: 0;
+  bottom: 9svh;
+  left: 0;
   display: grid;
-  grid-template-columns: minmax(280px, 0.82fr) minmax(420px, 1.18fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(28px, 5vw, 80px);
   align-items: center;
-  gap: clamp(2rem, 7vw, 7.5rem);
-  min-height: min(66svh, 650px);
 }
 
 .core-team-feature {
   position: relative;
-  z-index: 3;
+  z-index: 1;
+  display: flex;
   min-width: 0;
+  margin-left: 12rem;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 
+/* Framed feature photo — the visible frame is the outer box, the mesh
+   lands inside the padded inner area so the portrait never touches borders */
 .core-team-feature-frame {
   position: relative;
-  width: min(100%, 340px);
-  aspect-ratio: 0.76;
-  margin: 0 auto;
-}
-
-.core-team-feature-frame::before,
-.core-team-feature-frame::after {
-  position: absolute;
-  content: '';
-  pointer-events: none;
-}
-
-.core-team-feature-frame::before {
-  inset: 5% -6% -5% 6%;
+  width: min(100%, 400px);
+  height: min(50svh, 460px);
+  min-height: 280px;
+  overflow: hidden;
+  padding: 0px;
   border: 1px solid rgba(17, 24, 39, 0.22);
-  transform: rotate(-4deg);
-}
-
-.core-team-feature-frame::after {
-  right: -18%;
-  bottom: 9%;
-  width: 28%;
-  border-top: 1px solid rgba(17, 24, 39, 0.3);
+  box-shadow: 0 24px 60px -30px rgba(17, 24, 39, 0.25);
 }
 
 .core-team-feature-photo {
-  position: absolute;
-  inset: 0;
-  border: 1px solid rgba(17, 24, 39, 0.12);
-  background: radial-gradient(circle at 50% 45%, rgba(194, 208, 228, 0.44), rgba(17, 24, 39, 0.02) 70%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.29); /* Zooms in to eliminate image padding */
+  transform-origin: center center; /* Keeps the person centered */
 }
 
 .core-team-photo-mark {
   position: absolute;
-  top: 1rem;
-  left: -2rem;
+  z-index: 2;
+  right: 22px;
+  bottom: 22px;
+  padding: 5px 7px;
+  color: #fbfaf6;
+  background: rgba(17, 24, 39, 0.78);
 }
 
 .core-team-member-copy {
-  position: relative;
-  z-index: 4;
-  margin: -2.3rem 0 0 1.5rem;
-  transition: opacity 250ms linear;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translate(-50%, 0%);
+  transition: opacity 120ms linear;
+  text-align: center;
+}
+
+.core-team-member-number {
+  display: block;
+  margin-top: 18px;
+  color: rgba(17, 24, 39, 0.5);
 }
 
 .core-team-member-copy h3 {
-  margin: 0.55rem 0 0.25rem;
-  color: #111827;
+  margin: 6px 0 0;
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 5vw, 5.7rem);
-  font-weight: 300;
-  line-height: 0.82;
-  letter-spacing: -0.05em;
+  font-size: clamp(1.9rem, 3vw, 3.2rem);
+  font-weight: 500;
+  line-height: 0.98;
+  white-space: nowrap;
 }
 
 .core-team-member-copy p {
-  margin: 0;
-  color: rgba(17, 24, 39, 0.58);
+  margin: 8px 0 0;
+  color: #137b27;
   font-size: 0.95rem;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+/* ---------- COLLECTION: 2 x 4 framed slots ---------- */
 
 .core-team-collection {
   position: relative;
   z-index: 1;
+  width: min(100%, 520px);
+  justify-self: center;
+  opacity: calc(1 - var(--roster-progress) * 6.25);
 }
 
-.core-team-collection-label,
-.core-team-final-heading {
+.core-team-collection-label {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.85rem;
+  margin-bottom: 12px;
+  color: rgba(17, 24, 39, 0.54);
 }
 
 .core-team-collection-grid {
   display: grid;
+  width: 30%;
+  /* Fixed 4-column layout for a 4x2 grid with 8 items */
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(4, minmax(0, 1fr));
   gap: 12px;
+
+  justify-content: center;
+  /* Centers the 4x2 grid within its parent container */
 }
 
 .core-team-collection-slot {
-  position: relative;
-  aspect-ratio: 1.35 / 1;
-  border: 1px solid rgba(17, 24, 39, 0.2);
-  background: rgba(17, 24, 39, 0.025);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
 
 .core-team-collection-photo {
-  position: absolute;
-  inset: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  /* 1:1 square ratio */
+  border-radius: 8px;
+  overflow: hidden;
 }
 
-.core-team-collection-slot > span {
+.core-team-collection-slot>span {
   position: absolute;
-  right: 0.55rem;
-  bottom: 0.45rem;
-  color: rgba(17, 24, 39, 0.3);
+  z-index: 2;
+  top: 12px;
+  right: 12px;
+  padding: 3px 5px;
+  color: rgba(17, 24, 39, 0.75);
   font-family: var(--font-mono, monospace);
-  font-size: 9px;
-  letter-spacing: 0.12em;
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  background: rgba(251, 250, 246, 0.85);
+  border: 1px solid rgba(17, 24, 39, 0.18);
 }
+
+/* ---------- FINAL: full-width 4 x 2 vertical cards ---------- */
 
 .core-team-final {
   position: absolute;
-  z-index: 5;
+  z-index: 2;
   inset: 0;
   display: flex;
   flex-direction: column;
@@ -199,71 +233,107 @@
 }
 
 .core-team-final-heading {
-  margin-bottom: 0.85rem;
-  color: rgba(17, 24, 39, 0.63);
+  flex: 0 0 auto;
+  margin-bottom: 14px;
+  color: rgba(17, 24, 39, 0.54);
 }
 
 .core-team-final-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+  width: 70%;
+  margin: 0 auto;
+  height: min(70svh, 680px);
 }
 
 .core-team-final-card {
-  position: relative;
-  display: flex;
+  display: grid;
   min-width: 0;
-  align-items: end;
-  aspect-ratio: 1.35 / 1;
+  min-height: 0;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 10px 10px 12px;
   overflow: hidden;
-  border: 1px solid rgba(17, 24, 39, 0.22);
-  background: #e6e8e8;
+ 
+  
 }
 
 .core-team-final-photo {
-  position: absolute;
-  inset: 0;
-}
-
-.core-team-final-card::after {
-  position: absolute;
-  z-index: 1;
-  inset: 48% 0 0;
-  background: linear-gradient(transparent, rgba(17, 24, 39, 0.78));
-  content: '';
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid rgba(17, 24, 39, 0.1);
 }
 
 .core-team-final-copy {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding: 0.8rem 0.9rem;
-  color: #fff;
+  min-width: 0;
 }
 
 .core-team-final-number {
-  color: rgba(255, 255, 255, 0.68);
+  display: block;
+  margin-bottom: 4px;
+  color: rgba(17, 24, 39, 0.4);
+  font-size: 8px;
 }
 
 .core-team-final-copy h3 {
-  margin: 0.3rem 0 0.1rem;
+  margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(1.45rem, 2.5vw, 2.5rem);
-  font-weight: 400;
-  line-height: 0.9;
+  font-size: clamp(1rem, 1.35vw, 1.4rem);
+  font-weight: 600;
+  line-height: 1.02;
 }
 
 .core-team-final-copy p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.73);
-  font-size: 0.7rem;
+  margin: 5px 0 0;
+  color: rgba(17, 24, 39, 0.62);
+  font-size: 0.78rem;
+  font-weight: 600;
   letter-spacing: 0.08em;
+  line-height: 1.1;
   text-transform: uppercase;
+}
+
+.core-team-layout.is-final .core-team-feature,
+.core-team-layout.is-final .core-team-collection {
+  visibility: hidden;
+}
+
+/* ---------- FOOT ---------- */
+
+.core-team-scroll-note {
+  position: absolute;
+  right: 0;
+  bottom: 3.5svh;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(17, 24, 39, 0.5);
+  font-size: 8px;
+}
+
+.core-team-scroll-track {
+  position: relative;
+  flex: 1;
+  height: 1px;
+  overflow: hidden;
+  background: rgba(17, 24, 39, 0.18);
+}
+
+.core-team-scroll-track span {
+  display: block;
+  width: calc(var(--roster-progress) * 100%);
+  height: 100%;
+  background: #137b27;
 }
 
 .core-team-canvas {
   position: absolute;
-  z-index: 4;
+  z-index: 3;
   inset: 0;
   pointer-events: none;
 }
@@ -274,58 +344,197 @@
   height: 100% !important;
 }
 
-.core-team-scroll-note {
-  position: absolute;
-  right: 0;
-  bottom: 1.65rem;
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.core-team-scroll-track {
-  width: 76px;
-  height: 1px;
-  overflow: hidden;
-  background: rgba(17, 24, 39, 0.18);
-}
-
-.core-team-scroll-track span {
-  display: block;
-  width: calc(var(--roster-progress) * 100%);
-  height: 100%;
-  background: #111827;
-  transition: width 120ms linear;
-}
-
-@media (max-width: 900px) {
-  .core-team-layout { grid-template-columns: minmax(230px, 0.75fr) minmax(360px, 1.25fr); gap: 2rem; }
-  .core-team-feature-frame { width: min(100%, 280px); }
-  .core-team-photo-mark { left: -1rem; }
-}
+/* ---------- MOBILE ---------- */
 
 @media (max-width: 700px) {
-  .core-team-section { min-height: 900vh; }
-  .core-team-shell { width: min(100% - 24px, 560px); padding: 1.5rem 0 3.5rem; }
-  .core-team-header { grid-template-columns: 1fr auto; align-items: center; margin-bottom: 1.5rem; }
-  .core-team-header h2 { grid-column: 1 / -1; grid-row: 1; font-size: clamp(3.2rem, 15vw, 5rem); }
-  .core-team-kicker { grid-column: 1; grid-row: 2; }
-  .core-team-index { grid-column: 2; grid-row: 2; max-width: 100px; font-size: 8px; }
-  .core-team-layout { display: block; min-height: 0; }
-  .core-team-feature { width: min(100%, 360px); margin: 0 auto 1.5rem; }
-  .core-team-feature-frame { width: min(100%, 260px); }
-  .core-team-member-copy { margin: -1.5rem 0 0 1rem; }
-  .core-team-member-copy h3 { font-size: clamp(2.7rem, 13vw, 4.5rem); }
-  .core-team-collection-label, .core-team-final-heading { font-size: 8px; }
-  .core-team-collection-grid, .core-team-final-grid { gap: 7px; }
-  .core-team-collection-slot, .core-team-final-card { aspect-ratio: 1.12 / 1; }
-  .core-team-final-copy { padding: 0.55rem; }
-  .core-team-final-copy h3 { font-size: 1.25rem; }
-  .core-team-final-copy p { font-size: 0.58rem; }
-  .core-team-scroll-note { display: none; }
+  .core-team-section {
+    min-height: 1050svh;
+  }
+
+  .core-team-stage {
+    min-height: 560px;
+  }
+
+  .core-team-shell {
+    width: calc(100% - 28px);
+  }
+
+  .core-team-header {
+    top: 3.5svh;
+    padding-bottom: 10px;
+  }
+
+  .core-team-header h2 {
+    font-size: clamp(2rem, 10vw, 3.4rem);
+  }
+
+  .core-team-index {
+    max-width: 105px;
+    font-size: 7px;
+    text-align: right;
+  }
+
+  .core-team-layout {
+    top: 14svh;
+    right: 0;
+    bottom: 8svh;
+    left: 0;
+    display: block;
+  }
+
+  .core-team-feature {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 46%;
+  }
+
+  .core-team-feature-frame {
+    width: 100%;
+    height: 27svh;
+    min-height: 150px;
+    padding: 7px;
+  }
+
+  .core-team-feature-photo {
+    inset: 7px;
+  }
+
+  .core-team-photo-mark {
+    right: 13px;
+    bottom: 13px;
+  }
+
+  .core-team-member-number {
+    margin-top: 10px;
+    font-size: 7px;
+  }
+
+  .core-team-member-copy h3 {
+    font-size: clamp(1.35rem, 6vw, 2rem);
+  }
+
+  .core-team-member-copy p {
+    margin-top: 4px;
+    font-size: 0.72rem;
+  }
+
+  .core-team-collection {
+    position: absolute;
+    top: 46%;
+    left: 0;
+    width: 100%;
+  }
+
+  .core-team-collection-label,
+  .core-team-final-heading {
+    margin-bottom: 7px;
+    font-size: 7px;
+  }
+
+  .core-team-collection-grid {
+    gap: 7px;
+    height: 34svh;
+  }
+
+  .core-team-collection-slot {
+    padding: 4px;
+  }
+
+  .core-team-collection-photo {
+    inset: 4px;
+  }
+
+  .core-team-collection-slot>span {
+    top: 7px;
+    right: 7px;
+    font-size: 6px;
+  }
+
+  .core-team-final {
+    inset: 0;
+    justify-content: center;
+  }
+
+  .core-team-final-grid {
+    gap: 7px 8px;
+    height: 76svh;
+  }
+
+  .core-team-final-card {
+    gap: 5px;
+    padding: 6px 6px 8px;
+  }
+
+  .core-team-final-number {
+    font-size: 6px;
+  }
+
+  .core-team-final-copy h3 {
+    font-size: clamp(0.8rem, 3.4vw, 1.1rem);
+  }
+
+  .core-team-final-copy p {
+    margin-top: 2px;
+    font-size: clamp(0.58rem, 2.4vw, 0.72rem);
+  }
+
+  .core-team-scroll-note {
+    bottom: 3svh;
+    gap: 8px;
+    font-size: 7px;
+  }
 }
 
+/* ---------- SHORT LAPTOP SCREENS ---------- */
+
+@media (max-height: 680px) and (min-width: 701px) {
+  .core-team-layout {
+    top: 20svh;
+    bottom: 11svh;
+  }
+
+  .core-team-feature-frame {
+    height: 44svh;
+    min-height: 0;
+  }
+
+  .core-team-final-grid {
+    height: 64svh;
+  }
+}
+
+/* ---------- REDUCED MOTION ---------- */
+
 @media (prefers-reduced-motion: reduce) {
-  .core-team-scroll-track span,
-  .core-team-member-copy { transition: none; }
+  .core-team-section {
+    min-height: 100svh;
+  }
+
+  .core-team-stage {
+    position: relative;
+  }
+
+  .core-team-layout {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    display: block;
+    min-height: 100svh;
+    padding-top: 18svh;
+    padding-bottom: 8svh;
+  }
+
+  .core-team-feature,
+  .core-team-collection,
+  .core-team-scroll-note,
+  .core-team-canvas {
+    display: none;
+  }
+
+  .core-team-final {
+    position: relative;
+    inset: auto;
+    opacity: 1 !important;
+  }
 }

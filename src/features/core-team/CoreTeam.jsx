@@ -18,6 +18,8 @@ const members = [
 const INTRO_END = 0.76
 const LAYOUT_END = 0.86
 
+// Cover-fit a portrait into a frame, biasing the crop toward the TOP
+// so faces are never cut off when a tall photo lands in a wide slot.
 function imageCover(texture, width, height) {
   const image = texture.image
   if (!image?.width || !image?.height) return
@@ -28,14 +30,19 @@ function imageCover(texture, width, height) {
   texture.wrapS = THREE.ClampToEdgeWrapping
   texture.wrapT = THREE.ClampToEdgeWrapping
   texture.repeat.set(1, 1)
-  texture.offset.set(0, 0)
 
   if (frameRatio > imageRatio) {
+    // Frame wider than image: crop vertically, center Y
     texture.repeat.y = imageRatio / frameRatio
-    texture.offset.y = 1 - texture.repeat.y
+    texture.repeat.x = 1
+    texture.offset.y = (1 - texture.repeat.y) / 2
+    texture.offset.x = 0
   } else {
+    // Frame taller than image: crop horizontally, center X
     texture.repeat.x = frameRatio / imageRatio
+    texture.repeat.y = 1
     texture.offset.x = (1 - texture.repeat.x) / 2
+    texture.offset.y = 0
   }
 }
 
@@ -75,20 +82,21 @@ function PortraitScene({ progress, stageRef, featuredRef, collectionRefs, finalR
     }
 
     const featuredFrame = getFrame(featuredRef.current)
-    if (!featuredFrame) return
 
     members.forEach((_, index) => {
       const mesh = meshes.current[index]
       const material = materials[index]
       const collectionFrame = getFrame(collectionRefs.current[index])
       const finalFrame = getFrame(finalRefs.current[index])
-      if (!mesh || !collectionFrame || !finalFrame) return
+      if (!mesh || !collectionFrame || !finalFrame || !featuredFrame) return
 
       let frame = collectionFrame
       let opacity = 1
 
       if (progress < INTRO_END) {
-        if (index === activeIndex) {
+        if (index < activeIndex) {
+          frame = collectionFrame
+        } else if (index === activeIndex) {
           const imageIn = THREE.MathUtils.smoothstep(memberProgress, 0.02, 0.28)
           const flight = THREE.MathUtils.smoothstep(memberProgress, 0.64, 1)
           frame = {
@@ -98,7 +106,7 @@ function PortraitScene({ progress, stageRef, featuredRef, collectionRefs, finalR
             height: THREE.MathUtils.lerp(featuredFrame.height * 0.78, collectionFrame.height, flight),
           }
           opacity = imageIn
-        } else if (index > activeIndex) {
+        } else {
           opacity = 0
         }
       } else {
@@ -139,7 +147,7 @@ function PortraitCanvas(props) {
     <Canvas
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 10], fov: 40 }}
-      gl={{ alpha: true, antialias: true }}
+      gl={{ alpha: true, antialias: false }}
       aria-hidden="true"
     >
       <PortraitScene {...props} />
@@ -203,15 +211,13 @@ export default function CoreTeam() {
             <div className="core-team-feature">
               <div className="core-team-feature-frame">
                 <div className="core-team-feature-photo" ref={featuredRef} />
-                <span className="core-team-photo-mark">A / {String(activeIndex + 1).padStart(2, '0')}</span>
-              </div>
+                </div>
               <div
                 className="core-team-member-copy"
                 style={{ opacity: nameProgress * (1 - layoutProgress) }}
                 aria-live="polite"
               >
-                <span className="core-team-member-number">CORE MEMBER / {String(activeIndex + 1).padStart(2, '0')}</span>
-                <h3>{members[activeIndex].name}</h3>
+               <h3>{members[activeIndex].name}</h3>
                 <p>{members[activeIndex].role}</p>
               </div>
             </div>
@@ -246,7 +252,6 @@ export default function CoreTeam() {
                       ref={(element) => { finalRefs.current[index] = element }}
                     />
                     <div className="core-team-final-copy">
-                      <span className="core-team-final-number">{String(index + 1).padStart(2, '0')}</span>
                       <h3>{member.name}</h3>
                       <p>{member.role}</p>
                     </div>
