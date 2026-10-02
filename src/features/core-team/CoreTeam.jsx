@@ -1,157 +1,275 @@
-import { Canvas, useFrame, useLoader } from '@react-three/fiber'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { useTexture } from '@react-three/drei'
 import * as THREE from 'three'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './core-team.css'
 
-const team = [
+const members = [
   { name: 'Amlanjyoti', role: 'Aerotech Head', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Biki', role: 'Design & Experience', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Anurag', role: 'Flight Operations', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Debanjan', role: 'Technical Lead', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Kaustav', role: 'Workshop Lead', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Rishav', role: 'Competition Lead', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Sayan', role: 'Media & Outreach', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
-  { name: 'Tuhin', role: 'Logistics Lead', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091019/IMG_20260628_105813.jpg_2_-removebg-preview_fk1bgy.png' },
+  { name: 'Biki', role: 'Technical', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091182/ChatGPT_Image_Sep_21_2026_01_03_58_PM_fpgswf.png' },
+  { name: 'Ipshita', role: 'PR', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790092212/IMG_20260913_135616.jpg_1_-Photoroom_gnajgs.png' },
+  { name: 'Tushar', role: 'Motion', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790092148/IMG_20260913_135743.jpg_3_-Photoroom_obhudj.png' },
+  { name: 'Akashdeep', role: 'Finance', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091046/IMG_1114_1_-Photoroom_u0oywd.png' },
+  { name: 'Himanshu', role: 'Management', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790091120/ChatGPT_Image_Sep_21_2026_02_08_34_PM_xqg3r5.png' },
+  { name: 'Swapnali', role: 'Graphics', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790092261/IMG_20260913_140201.jpg_2_-removebg-preview_fiqkk2.png' },
+  { name: 'Mung Chung', role: 'Content Manager', image: 'https://res.cloudinary.com/dnmobechs/image/upload/v1790090973/EVENT_HEAD-removebg-preview_tluflu.png' },
 ]
 
-const STEP_SIZE = 0.075
-const FINAL_START = STEP_SIZE * team.length
+const INTRO_END = 0.76
+const LAYOUT_END = 0.86
 
-function TeamImagePlane({ index, textures, phase }) {
-  const groupRef = useRef(null)
-  const materialRef = useRef(null)
-  const texture = textures[index]
+function imageCover(texture, width, height) {
+  const image = texture.image
+  if (!image?.width || !image?.height) return
 
-  useFrame(() => {
-    if (!groupRef.current || !materialRef.current) return
-    const enter = THREE.MathUtils.smoothstep(phase, 0.04, 0.34)
-    const hold = 1 - THREE.MathUtils.smoothstep(phase, 0.54, 0.75)
-    const fly = THREE.MathUtils.smoothstep(phase, 0.68, 1)
-    const visible = Math.max(enter * hold, fly * 0.92)
+  const imageRatio = image.width / image.height
+  const frameRatio = width / height
+  texture.colorSpace = THREE.SRGBColorSpace
+  texture.wrapS = THREE.ClampToEdgeWrapping
+  texture.wrapT = THREE.ClampToEdgeWrapping
+  texture.repeat.set(1, 1)
+  texture.offset.set(0, 0)
 
-    groupRef.current.position.x = THREE.MathUtils.lerp(-0.05, 3.8, fly)
-    groupRef.current.position.y = THREE.MathUtils.lerp(-0.1, 1.15, fly)
-    groupRef.current.rotation.z = THREE.MathUtils.lerp(0, -0.12, fly)
-    groupRef.current.scale.setScalar(THREE.MathUtils.lerp(0.8, 0.22, fly))
-    materialRef.current.opacity = visible
+  if (frameRatio > imageRatio) {
+    texture.repeat.y = imageRatio / frameRatio
+    texture.offset.y = 1 - texture.repeat.y
+  } else {
+    texture.repeat.x = frameRatio / imageRatio
+    texture.offset.x = (1 - texture.repeat.x) / 2
+  }
+}
+
+function PortraitScene({ progress, stageRef, featuredRef, collectionRefs, finalRefs }) {
+  const textures = useTexture(members.map((member) => member.image))
+  const meshes = useRef([])
+  const materials = useMemo(() => textures.map((texture) => new THREE.MeshBasicMaterial({
+    map: texture,
+    transparent: true,
+    opacity: 0,
+    depthWrite: false,
+    toneMapped: false,
+  })), [textures])
+
+  useEffect(() => () => materials.forEach((material) => material.dispose()), [materials])
+
+  useFrame(({ size, viewport }) => {
+    const stage = stageRef.current
+    if (!stage) return
+
+    const bounds = stage.getBoundingClientRect()
+    const introPosition = Math.min(progress / INTRO_END * members.length, members.length)
+    const activeIndex = Math.min(Math.floor(introPosition), members.length - 1)
+    const memberProgress = Math.min(introPosition - activeIndex, 1)
+    const layoutProgress = THREE.MathUtils.smoothstep(progress, INTRO_END, LAYOUT_END)
+
+    const getFrame = (element) => {
+      if (!element) return null
+      const rect = element.getBoundingClientRect()
+      if (!rect.width || !rect.height) return null
+      return {
+        x: ((rect.left + rect.width / 2 - bounds.left) / size.width - 0.5) * viewport.width,
+        y: (0.5 - (rect.top + rect.height / 2 - bounds.top) / size.height) * viewport.height,
+        width: rect.width / size.width * viewport.width,
+        height: rect.height / size.height * viewport.height,
+      }
+    }
+
+    const featuredFrame = getFrame(featuredRef.current)
+    if (!featuredFrame) return
+
+    members.forEach((_, index) => {
+      const mesh = meshes.current[index]
+      const material = materials[index]
+      const collectionFrame = getFrame(collectionRefs.current[index])
+      const finalFrame = getFrame(finalRefs.current[index])
+      if (!mesh || !collectionFrame || !finalFrame) return
+
+      let frame = collectionFrame
+      let opacity = 1
+
+      if (progress < INTRO_END) {
+        if (index === activeIndex) {
+          const imageIn = THREE.MathUtils.smoothstep(memberProgress, 0.02, 0.28)
+          const flight = THREE.MathUtils.smoothstep(memberProgress, 0.64, 1)
+          frame = {
+            x: THREE.MathUtils.lerp(featuredFrame.x, collectionFrame.x, flight),
+            y: THREE.MathUtils.lerp(featuredFrame.y, collectionFrame.y, flight),
+            width: THREE.MathUtils.lerp(featuredFrame.width * 0.78, collectionFrame.width, flight),
+            height: THREE.MathUtils.lerp(featuredFrame.height * 0.78, collectionFrame.height, flight),
+          }
+          opacity = imageIn
+        } else if (index > activeIndex) {
+          opacity = 0
+        }
+      } else {
+        frame = {
+          x: THREE.MathUtils.lerp(collectionFrame.x, finalFrame.x, layoutProgress),
+          y: THREE.MathUtils.lerp(collectionFrame.y, finalFrame.y, layoutProgress),
+          width: THREE.MathUtils.lerp(collectionFrame.width, finalFrame.width, layoutProgress),
+          height: THREE.MathUtils.lerp(collectionFrame.height, finalFrame.height, layoutProgress),
+        }
+      }
+
+      mesh.position.set(frame.x, frame.y, 0)
+      mesh.scale.set(frame.width, frame.height, 1)
+      material.opacity = opacity
+      if (material.map) imageCover(material.map, frame.width, frame.height)
+      mesh.visible = opacity > 0.001
+    })
   })
 
   return (
-    <group ref={groupRef} position={[-0.05, -0.1, 0]}>
-      <mesh>
-        <planeGeometry args={[2.55, 3.2]} />
-        <meshBasicMaterial ref={materialRef} map={texture} transparent opacity={0} depthWrite={false} />
-      </mesh>
-    </group>
+    <>
+      {members.map((member, index) => (
+        <mesh
+          key={member.image}
+          ref={(mesh) => { meshes.current[index] = mesh }}
+          material={materials[index]}
+          visible={false}
+        >
+          <planeGeometry args={[1, 1]} />
+        </mesh>
+      ))}
+    </>
   )
 }
 
-function TeamCanvas({ activeIndex, phase }) {
-  const textures = useLoader(THREE.TextureLoader, team.map((member) => member.image))
-
-  useEffect(() => {
-    textures.forEach((texture) => {
-      texture.colorSpace = THREE.SRGBColorSpace
-      texture.needsUpdate = true
-    })
-  }, [textures])
-
+function PortraitCanvas(props) {
   return (
     <Canvas
-      className="core-team-canvas"
-      dpr={[1, 1.8]}
-      camera={{ position: [0, 0, 7], fov: 34 }}
+      dpr={[1, 1.5]}
+      camera={{ position: [0, 0, 10], fov: 40 }}
       gl={{ alpha: true, antialias: true }}
+      aria-hidden="true"
     >
-      <TeamImagePlane index={activeIndex} textures={textures} phase={phase} />
+      <PortraitScene {...props} />
     </Canvas>
   )
 }
 
-function getScrollProgress(section) {
-  const rect = section.getBoundingClientRect()
-  return THREE.MathUtils.clamp((window.innerHeight - rect.top) / rect.height, 0, 1)
-}
-
 export default function CoreTeam() {
   const sectionRef = useRef(null)
+  const stageRef = useRef(null)
+  const featuredRef = useRef(null)
+  const collectionRefs = useRef([])
+  const finalRefs = useRef([])
   const [progress, setProgress] = useState(0)
-  const [reducedMotion] = useState(() => (
-    typeof window !== 'undefined'
-      && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  ))
 
   useEffect(() => {
-    const update = () => {
-      if (sectionRef.current) setProgress(getScrollProgress(sectionRef.current))
+    let frame = 0
+    const updateProgress = () => {
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        const section = sectionRef.current
+        if (!section) return
+        const distance = section.offsetHeight - window.innerHeight
+        setProgress(THREE.MathUtils.clamp(-section.getBoundingClientRect().top / Math.max(distance, 1), 0, 1))
+      })
     }
-    update()
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
+
+    updateProgress()
+    window.addEventListener('scroll', updateProgress, { passive: true })
+    window.addEventListener('resize', updateProgress)
     return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', updateProgress)
+      window.removeEventListener('resize', updateProgress)
     }
   }, [])
 
-  const animationProgress = reducedMotion ? 1 : progress
-  const activeIndex = Math.min(team.length - 1, Math.floor(animationProgress / STEP_SIZE))
-  const phase = Math.min(1, (animationProgress - activeIndex * STEP_SIZE) / STEP_SIZE)
-  const completedCount = Math.min(team.length, Math.max(0, Math.floor(animationProgress / STEP_SIZE)))
-  const finalProgress = THREE.MathUtils.smoothstep(animationProgress, FINAL_START, FINAL_START + 0.11)
-  const isFinal = animationProgress >= FINAL_START
-
-  const finalTransform = useMemo(() => {
-    const rotation = -90 * (1 - finalProgress)
-    const scale = 0.78 + finalProgress * 0.22
-    return { transform: `rotate(${rotation}deg) scale(${scale})` }
-  }, [finalProgress])
+  const introPosition = Math.min(progress / INTRO_END * members.length, members.length)
+  const activeIndex = Math.min(Math.floor(introPosition), members.length - 1)
+  const memberProgress = Math.min(introPosition - activeIndex, 1)
+  const nameProgress = THREE.MathUtils.smoothstep(memberProgress, 0.28, 0.43)
+    * (1 - THREE.MathUtils.smoothstep(memberProgress, 0.66, 0.84))
+  const layoutProgress = THREE.MathUtils.smoothstep(progress, INTRO_END, LAYOUT_END)
 
   return (
-    <section ref={sectionRef} className={`core-team-section${isFinal ? ' is-final' : ''}`} aria-labelledby="core-team-title">
-      <div className="core-team-sticky">
+    <section
+      className="core-team-section"
+      ref={sectionRef}
+      aria-labelledby="core-team-title"
+      style={{ '--roster-progress': progress }}
+    >
+      <div className="core-team-stage" ref={stageRef}>
         <div className="core-team-shell">
           <header className="core-team-header">
-            <span className="core-team-kicker">Aerotech / 2026 / People</span>
+            <span className="core-team-kicker">AEROTECH / 2026</span>
             <h2 id="core-team-title">CORE TEAM</h2>
-            <span className="core-team-count">{String(Math.min(team.length, completedCount + (isFinal ? 0 : 1))).padStart(2, '0')} / 08</span>
+            <span className="core-team-index">PEOPLE BEHIND THE FLIGHT</span>
           </header>
 
-          <div className="core-team-layout">
+          <div className={`core-team-layout${progress >= INTRO_END ? ' is-final' : ''}`}>
             <div className="core-team-feature">
-              <div className="core-team-feature-stage">
-                <TeamCanvas activeIndex={activeIndex} phase={isFinal ? 1 : phase} />
-                <span className="core-team-stage-label">{isFinal ? 'FULL CREW' : `MEMBER ${String(activeIndex + 1).padStart(2, '0')}`}</span>
+              <div className="core-team-feature-frame">
+                <div className="core-team-feature-photo" ref={featuredRef} />
+                <span className="core-team-photo-mark">A / {String(activeIndex + 1).padStart(2, '0')}</span>
               </div>
-              <div className={`core-team-feature-copy${isFinal ? ' is-hidden' : ''}`}>
-                <span className="core-team-feature-index">0{activeIndex + 1} — 08</span>
-                <h3>{team[activeIndex].name}</h3>
-                <p>{team[activeIndex].role}</p>
+              <div
+                className="core-team-member-copy"
+                style={{ opacity: nameProgress * (1 - layoutProgress) }}
+                aria-live="polite"
+              >
+                <span className="core-team-member-number">CORE MEMBER / {String(activeIndex + 1).padStart(2, '0')}</span>
+                <h3>{members[activeIndex].name}</h3>
+                <p>{members[activeIndex].role}</p>
               </div>
             </div>
 
-            <div className="core-team-roster-wrap">
-              <div className="core-team-roster" style={isFinal ? finalTransform : undefined}>
-                {team.map((member, index) => {
-                  const filled = index < completedCount || (isFinal && index < team.length)
-                  return (
-                    <article className={`core-team-card${filled ? ' is-filled' : ''}`} key={member.name}>
-                      <div className="core-team-card-media">
-                        {filled ? <img src={member.image} alt={`${member.name}, ${member.role}`} /> : <span>{String(index + 1).padStart(2, '0')}</span>}
-                      </div>
-                      <div className="core-team-card-copy">
-                        <h3>{member.name}</h3>
-                        <p>{member.role}</p>
-                      </div>
-                    </article>
-                  )
-                })}
+            <div className="core-team-collection" aria-hidden="true">
+              <div className="core-team-collection-label">
+                <span>FLIGHT CREW</span><span>08 MEMBERS</span>
               </div>
-              <span className="core-team-roster-label">{isFinal ? 'MEET THE CREW' : 'ROLL CALL / 08 POSITIONS'}</span>
+              <div className="core-team-collection-grid">
+                {members.map((member, index) => (
+                  <div className="core-team-collection-slot" key={member.image}>
+                    <div
+                      className="core-team-collection-photo"
+                      ref={(element) => { collectionRefs.current[index] = element }}
+                    />
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="core-team-final" style={{ opacity: layoutProgress }}>
+              <div className="core-team-final-heading">
+                <span>THE PEOPLE BEHIND THE FLIGHT</span>
+                <span>CORE TEAM / 2026</span>
+              </div>
+              <div className="core-team-final-grid">
+                {members.map((member, index) => (
+                  <article className="core-team-final-card" key={member.image}>
+                    <div
+                      className="core-team-final-photo"
+                      ref={(element) => { finalRefs.current[index] = element }}
+                    />
+                    <div className="core-team-final-copy">
+                      <span className="core-team-final-number">{String(index + 1).padStart(2, '0')}</span>
+                      <h3>{member.name}</h3>
+                      <p>{member.role}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="core-team-scroll-note">Scroll to assemble the crew <span aria-hidden="true">↘</span></div>
+          <div className="core-team-scroll-note" aria-hidden="true">
+            <span>{progress < INTRO_END ? `MEMBER ${String(activeIndex + 1).padStart(2, '0')} / 08` : 'THE CREW'}</span>
+            <div className="core-team-scroll-track"><span /></div>
+            <span>SCROLL TO EXPLORE</span>
+          </div>
+        </div>
+        <div className="core-team-canvas">
+          <PortraitCanvas
+            progress={progress}
+            stageRef={stageRef}
+            featuredRef={featuredRef}
+            collectionRefs={collectionRefs}
+            finalRefs={finalRefs}
+          />
         </div>
       </div>
     </section>
