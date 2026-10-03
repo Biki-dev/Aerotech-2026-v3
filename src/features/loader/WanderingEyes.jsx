@@ -62,10 +62,21 @@ function waitForPaint() {
 }
 
 function waitForCriticalAsset(eventName, readyFlag) {
-  if (window[readyFlag]) return Promise.resolve()
-
   return new Promise((resolve) => {
-    window.addEventListener(eventName, resolve, { once: true })
+    if (window[readyFlag]) {
+      resolve()
+      return
+    }
+
+    const handleReady = () => {
+      window.removeEventListener(eventName, handleReady)
+      resolve()
+    }
+
+    window.addEventListener(eventName, handleReady, { once: true })
+
+    // The asset can finish between the initial check and listener setup.
+    if (window[readyFlag]) handleReady()
   })
 }
 
@@ -87,11 +98,20 @@ function PageLoader() {
         return bounds.top < window.innerHeight && bounds.bottom > 0
       })
 
-      await Promise.all([
+      const criticalAssets = [
         ...images.map(waitForImage),
         waitForCriticalAsset('aerotech:hero-ready', '__aerotechHeroReady'),
-        waitForCriticalAsset('aerotech:aircraft-ready', '__aerotechAircraftReady'),
-      ])
+      ]
+
+      // The 3D aircraft is intentionally not mounted on mobile for
+      // performance, so its ready event cannot be used as a mobile gate.
+      if (!window.matchMedia('(max-width: 700px)').matches) {
+        criticalAssets.push(
+          waitForCriticalAsset('aerotech:aircraft-ready', '__aerotechAircraftReady'),
+        )
+      }
+
+      await Promise.all(criticalAssets)
       await waitForPaint()
 
       const minimumDisplayTime = 500
