@@ -2,19 +2,19 @@ import { useState } from 'react'
 import './sponsors.css'
 
 const currentSponsors = [
-  { name: 'Campa', logo: '/sponsors_logos/campa.png' },
-  { name: 'Pakhtun Biriyani', logo: '/sponsors_logos/pakhtun_biriyani.png' },
-  { name: 'Safar Travels', logo: '/sponsors_logos/safar_travels.png' },
-  { name: 'Bazar Bakers', logo: '/sponsors_logos/Bazar_Bakers.png' },
-  { name: 'The Culture', logo: '/sponsors_logos/the_culture.png' },
+  { name: 'Campa', logo: '/sponsors_logos/campa.webp' },
+  { name: 'Pakhtun Biriyani', logo: '/sponsors_logos/pakhtun_biriyani.webp' },
+  { name: 'Safar Travels', logo: '/sponsors_logos/safar_travels.webp' },
+  { name: 'Bazar Bakers', logo: '/sponsors_logos/Bazar_Bakers.webp' },
+  { name: 'The Culture', logo: '/sponsors_logos/the_culture.webp' },
 ]
 
 const previousSponsors = [
-  { name: 'Rolls Mania', logo: '/sponsors_logos/rolls_mania.png' },
-  { name: 'Decathlon', logo: '/sponsors_logos/Decathlon-Logo.png' },
-  { name: 'AAI', logo: '/sponsors_logos/aai.png' },
-  { name: 'Cultees', logo: '/sponsors_logos/cultees.png' },
-  { name: 'Robopixel', logo: '/sponsors_logos/robopixel.png' },
+  { name: 'Rolls Mania', logo: '/sponsors_logos/rolls_mania.webp' },
+  { name: 'Decathlon', logo: '/sponsors_logos/Decathlon-Logo.webp' },
+  { name: 'AAI', logo: '/sponsors_logos/aai.webp' },
+  { name: 'Cultees', logo: '/sponsors_logos/cultees.webp' },
+  { name: 'Robopixel', logo: '/sponsors_logos/robopixel.webp' },
 ]
 
 function SponsorLogo({ src, alt, className }) {
@@ -30,6 +30,7 @@ function SponsorLogo({ src, alt, className }) {
       src={src}
       alt={alt}
       loading="lazy"
+      decoding="async"
       onError={() => setFailed(true)}
     />
   )
