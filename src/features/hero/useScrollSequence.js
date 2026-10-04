@@ -13,7 +13,11 @@ export function useScrollSequence(isMobile = false) {
     const track = trackRef.current
     const context = canvas?.getContext('2d')
 
-    if (!canvas || !track || !context) return undefined
+    if (!canvas || !track || !context) {
+      window.__aerotechHeroReady = true
+      window.dispatchEvent(new Event('aerotech:hero-ready'))
+      return undefined
+    }
 
     const frames = new Array(FRAME_COUNT)
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches

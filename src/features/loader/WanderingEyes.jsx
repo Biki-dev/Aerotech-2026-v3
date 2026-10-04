@@ -61,22 +61,28 @@ function waitForPaint() {
   })
 }
 
-function waitForCriticalAsset(eventName, readyFlag) {
+function waitForCriticalAsset(eventName, readyFlag, timeout = 10000) {
   return new Promise((resolve) => {
     if (window[readyFlag]) {
       resolve()
       return
     }
 
-    const handleReady = () => {
-      window.removeEventListener(eventName, handleReady)
+    let settled = false
+    let timeoutId
+    const finish = () => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timeoutId)
+      window.removeEventListener(eventName, finish)
       resolve()
     }
 
-    window.addEventListener(eventName, handleReady, { once: true })
+    window.addEventListener(eventName, finish, { once: true })
+    timeoutId = window.setTimeout(finish, timeout)
 
     // The asset can finish between the initial check and listener setup.
-    if (window[readyFlag]) handleReady()
+    if (window[readyFlag]) finish()
   })
 }
 
@@ -100,14 +106,14 @@ function PageLoader() {
 
       const criticalAssets = [
         ...images.map(waitForImage),
-        waitForCriticalAsset('aerotech:hero-ready', '__aerotechHeroReady'),
+        waitForCriticalAsset('aerotech:hero-ready', '__aerotechHeroReady', 8000),
       ]
 
       // The 3D aircraft is intentionally not mounted on mobile for
       // performance, so its ready event cannot be used as a mobile gate.
       if (!window.matchMedia('(max-width: 700px)').matches) {
         criticalAssets.push(
-          waitForCriticalAsset('aerotech:aircraft-ready', '__aerotechAircraftReady'),
+          waitForCriticalAsset('aerotech:aircraft-ready', '__aerotechAircraftReady', 10000),
         )
       }
 
