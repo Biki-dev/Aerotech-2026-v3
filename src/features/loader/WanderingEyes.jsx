@@ -106,7 +106,7 @@ function PageLoader() {
 
       const criticalAssets = [
         ...images.map(waitForImage),
-        waitForCriticalAsset('aerotech:hero-ready', '__aerotechHeroReady', 8000),
+        waitForCriticalAsset('aerotech:hero-sequence-ready', '__aerotechHeroSequenceReady', 20000),
       ]
 
       // The 3D aircraft is intentionally not mounted on mobile for

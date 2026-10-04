@@ -4,6 +4,17 @@ const FRAME_COUNT = 152
 const FRAME_EXTENSION = 'webp'
 const PREFETCH_RADIUS = 2
 
+function markHeroFrameReady() {
+  window.__aerotechHeroReady = true
+  window.dispatchEvent(new Event('aerotech:hero-ready'))
+}
+
+function markHeroSequenceReady() {
+  window.__aerotechHeroSequenceReady = true
+  markHeroFrameReady()
+  window.dispatchEvent(new Event('aerotech:hero-sequence-ready'))
+}
+
 export function useScrollSequence(isMobile = false) {
   const canvasRef = useRef(null)
   const trackRef = useRef(null)
@@ -14,8 +25,7 @@ export function useScrollSequence(isMobile = false) {
     const context = canvas?.getContext('2d')
 
     if (!canvas || !track || !context) {
-      window.__aerotechHeroReady = true
-      window.dispatchEvent(new Event('aerotech:hero-ready'))
+      markHeroSequenceReady()
       return undefined
     }
 
@@ -36,17 +46,11 @@ export function useScrollSequence(isMobile = false) {
       const image = new Image()
       const promise = new Promise((resolve) => {
         image.onload = () => {
-          if (safeIndex === 0) {
-            window.__aerotechHeroReady = true
-            window.dispatchEvent(new Event('aerotech:hero-ready'))
-          }
+          if (safeIndex === 0) markHeroFrameReady()
           resolve(image)
         }
         image.onerror = () => {
-          if (safeIndex === 0) {
-            window.__aerotechHeroReady = true
-            window.dispatchEvent(new Event('aerotech:hero-ready'))
-          }
+          if (safeIndex === 0) markHeroFrameReady()
           resolve(null)
         }
       })
@@ -152,8 +156,14 @@ export function useScrollSequence(isMobile = false) {
     const firstFramePromise = loadFrame(0)
     if (isMobile) {
       firstFramePromise.then((image) => {
+        markHeroSequenceReady()
         if (!disposed && image) drawFrame(0)
       })
+    } else {
+      // Load every frame while the page loader is visible so scrolling starts
+      // with the complete sequence cached and ready to draw.
+      Promise.all(Array.from({ length: FRAME_COUNT }, (_, index) => loadFrame(index)))
+        .then(markHeroSequenceReady)
     }
     updateTargetFrame()
     if (!isMobile) animationFrameId = window.requestAnimationFrame(renderLoop)
