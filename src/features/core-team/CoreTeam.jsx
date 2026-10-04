@@ -186,6 +186,28 @@ export default function CoreTeam() {
   const [isNearViewport, setIsNearViewport] = useState(false)
 
   useEffect(() => {
+    let cancelled = false
+    const preload = responsiveMembers.map((member) => new Promise((resolve) => {
+      const image = new Image()
+      image.decoding = 'async'
+      image.onload = () => {
+        const decoded = image.decode ? image.decode().catch(() => {}) : Promise.resolve()
+        decoded.then(resolve)
+      }
+      image.onerror = resolve
+      image.src = member.image
+    }))
+
+    Promise.all(preload).then(() => {
+      if (cancelled) return
+      window.__aerotechTeamReady = true
+      window.dispatchEvent(new Event('aerotech:team-ready'))
+    })
+
+    return () => { cancelled = true }
+  }, [])
+
+  useEffect(() => {
     let frame = 0
     let targetProgress = 0
     let currentProgress = 0
